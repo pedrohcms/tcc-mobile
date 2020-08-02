@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/src/pages/LoginPage/LoginPage.dart';
 
 class App extends StatelessWidget {
   @override
@@ -8,12 +9,9 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Hello World'),
-          centerTitle: true,
-        ),
-      ),
+      routes: {
+        "/": (context) => LoginPage(),
+      },
     );
   }
 }
