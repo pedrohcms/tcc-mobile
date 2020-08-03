@@ -24,11 +24,12 @@ class LoginPage extends StatelessWidget {
         child: ListView(
           children: <Widget>[
             SizedBox(
-                width: 250,
-                height: 100,
-                child: Image(
-                  image: AssetImage('images/logo.png'),
-                )),
+              width: 250,
+              height: 100,
+              child: Image(
+                image: AssetImage('images/logo.png'),
+              ),
+            ),
             SizedBox(
               height: 5,
             ), //espaço entre a imagem e o campo de texto
@@ -38,17 +39,18 @@ class LoginPage extends StatelessWidget {
               child: TextField(
                 // campo email
                 decoration: new InputDecoration(
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(60.0),
-                      ),
+                  border: new OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(60.0),
                     ),
-                    hintStyle: TextStyle(
-                      fontSize: 13,
-                    ),
-                    hintText: "E-mail",
-                    filled: true,
-                    fillColor: Colors.white54),
+                  ),
+                  hintStyle: TextStyle(
+                    fontSize: 13,
+                  ),
+                  hintText: "E-mail",
+                  filled: true,
+                  fillColor: Colors.white54,
+                ),
               ),
             ), //campo email
             SizedBox(
@@ -60,17 +62,18 @@ class LoginPage extends StatelessWidget {
               child: TextField(
                 // campo senha
                 decoration: new InputDecoration(
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(60.0),
-                      ),
+                  border: new OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(60.0),
                     ),
-                    hintStyle: TextStyle(
-                      fontSize: 13,
-                    ),
-                    hintText: "Senha",
-                    filled: true,
-                    fillColor: Colors.white54),
+                  ),
+                  hintStyle: TextStyle(
+                    fontSize: 13,
+                  ),
+                  hintText: "Senha",
+                  filled: true,
+                  fillColor: Colors.white54,
+                ),
               ),
             ), //campo senha
             Container(
@@ -106,15 +109,16 @@ class LoginPage extends StatelessWidget {
               ),
               child: SizedBox.expand(
                 child: FlatButton(
-                    child: Text(
-                      "Entrar",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                      ),
-                      textAlign: TextAlign.center,
+                  child: Text(
+                    "Entrar",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
                     ),
-                    onPressed: () {}),
+                    textAlign: TextAlign.center,
+                  ),
+                  onPressed: () {},
+                ),
               ),
             ),
             SizedBox(
