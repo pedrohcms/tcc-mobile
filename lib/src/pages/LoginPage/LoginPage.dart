@@ -28,11 +28,12 @@ class LoginPage extends StatelessWidget {
               height: 30,
             ),
             SizedBox(
-                width: 250,
-                height: 100,
-                child: Image(
-                  image: AssetImage('images/logo.png'),
-                )),
+              width: 250,
+              height: 100,
+              child: Image(
+                image: AssetImage('images/logo.png'),
+              ),
+            ),
             SizedBox(
               height: 80,
             ), //espaço entre a imagem e o campo de texto
