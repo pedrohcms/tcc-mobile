@@ -7,7 +7,7 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
-          "Sistema de Irrigação Simplificado",
+          "Recuperação de Senha",
           style: TextStyle(
             fontSize: 18,
             color: Colors.white,
@@ -27,15 +27,7 @@ class LoginPage extends StatelessWidget {
             SizedBox(
               height: 30,
             ),
-            SizedBox(
-                width: 250,
-                height: 100,
-                child: Image(
-                  image: AssetImage('images/logo.png'),
-                )),
-            SizedBox(
-              height: 80,
-            ), //espaço entre a imagem e o campo de texto
+
             Container(
               height: 45,
               alignment: Alignment.center,
@@ -78,22 +70,28 @@ class LoginPage extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 20,
-            ), //campo senha
+              height: 30,
+            ),
             Container(
-              height: 40,
+              height: 45,
               alignment: Alignment.center,
-              child: FlatButton(
-                child: Text(
-                  "Recuperar Senha",
-                  textAlign: TextAlign.center,
-                ),
-                onPressed: () {},
+              child: TextField(
+                // campo senha
+                decoration: new InputDecoration(
+                    border: new OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(60.0),
+                      ),
+                    ),
+                    hintStyle: TextStyle(
+                      fontSize: 13,
+                    ),
+                    hintText: "Senha",
+                    filled: true,
+                    fillColor: Colors.white54),
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
+
             Container(
               height: 30,
               alignment: Alignment.center,
@@ -114,7 +112,7 @@ class LoginPage extends StatelessWidget {
               child: SizedBox.expand(
                 child: FlatButton(
                     child: Text(
-                      "Entrar",
+                      "Recuperar Senha",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,
