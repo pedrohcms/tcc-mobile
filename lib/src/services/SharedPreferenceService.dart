@@ -1,38 +1,36 @@
+import 'package:mobile/src/interfaces/LocalStorageInterface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPreferenceService {
-  SharedPreferences _instance;
-
-  SharedPreferenceService() {
-    initInstance();
+class SharedPreferenceService implements LocalStorageInterface {
+  @override
+  Future<dynamic> get(String key) async {
+    SharedPreferences instance = await SharedPreferences.getInstance();
+    return instance.get(key);
   }
 
-  Future<void> initInstance() async {
-    _instance = await SharedPreferences.getInstance();
-  }
+  @override
+  Future<void> set(String key, dynamic value) async {
+    SharedPreferences instance = await SharedPreferences.getInstance();
 
-  Future<void> setItem(String type, String key, dynamic value) async {
-    switch (type) {
-      case 'bool':
-        await _instance.setBool(key, value);
+    switch (value.runtimeType) {
+      case String:
+        instance.setString(key, value);
         break;
-      case 'double':
-        await _instance.setDouble(key, value);
+      case bool:
+        instance.setBool(key, value);
         break;
-      case 'int':
-        await _instance.setInt(key, value);
+      case double:
+        instance.setDouble(key, value);
         break;
-      case 'string':
-        await _instance.setString(key, value);
+      case int:
+        instance.setInt(key, value);
         break;
     }
   }
 
-  Future<dynamic> getItem(String key) async {
-    return await _instance.get(key);
-  }
-
-  Future<bool> removeItem(String key) async {
-    return await _instance.remove(key);
+  @override
+  Future<void> delete(String key) async {
+    SharedPreferences instance = await SharedPreferences.getInstance();
+    instance.remove(key);
   }
 }
