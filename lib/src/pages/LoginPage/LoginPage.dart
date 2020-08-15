@@ -91,7 +91,9 @@ class LoginPage extends StatelessWidget {
                   "Recuperar Senha",
                   textAlign: TextAlign.center,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, '/reset_password');
+                },
               ),
             ),
             SizedBox(
