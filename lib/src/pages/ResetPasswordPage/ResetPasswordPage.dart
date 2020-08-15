@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/src/pages/ResetPasswordPage/ResetPasswordBloc.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   @override
@@ -6,8 +7,13 @@ class ResetPasswordPage extends StatefulWidget {
 }
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
-  bool passwordFieldVisibility = true;
-  bool passwordConfirmationFieldVisibility = true;
+  final ResetPasswordBloc _resetPasswordBloc = new ResetPasswordBloc();
+
+  @override
+  void dispose() {
+    _resetPasswordBloc.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +33,18 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 child: TextFormField(
                   // campo email
                   decoration: new InputDecoration(
-                      border: new OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(60.0),
-                        ),
+                    border: new OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(60.0),
                       ),
-                      hintStyle: TextStyle(
-                        fontSize: 13,
-                      ),
-                      hintText: "E-mail",
-                      filled: true,
-                      fillColor: Colors.white54),
+                    ),
+                    hintStyle: TextStyle(
+                      fontSize: 13,
+                    ),
+                    hintText: "E-mail",
+                    filled: true,
+                    fillColor: Colors.white54,
+                  ),
                 ),
               ), //campo email
               SizedBox(
@@ -46,32 +53,37 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               Container(
                 height: 45,
                 alignment: Alignment.center,
-                child: TextFormField(
-                  // campo senha
-                  obscureText: passwordFieldVisibility,
-                  decoration: new InputDecoration(
-                      suffixIcon: IconButton(
-                        icon: (passwordFieldVisibility
-                            ? Icon(Icons.visibility_off)
-                            : Icon(Icons.visibility)),
-                        onPressed: () {
-                          setState(() {
-                            passwordFieldVisibility = !passwordFieldVisibility;
-                          });
-                        },
-                      ),
-                      border: new OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(60.0),
+                child: StreamBuilder<bool>(
+                    stream: _resetPasswordBloc.passwordFieldVisibilityOutput,
+                    initialData: true,
+                    builder: (context, snapshot) {
+                      return TextFormField(
+                        // campo senha
+                        obscureText: snapshot.data,
+                        decoration: new InputDecoration(
+                          suffixIcon: IconButton(
+                            icon: (snapshot.data
+                                ? Icon(Icons.visibility)
+                                : Icon(Icons.visibility_off)),
+                            onPressed: () {
+                              _resetPasswordBloc
+                                  .changePasswordFieldVisibility();
+                            },
+                          ),
+                          border: new OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(60.0),
+                            ),
+                          ),
+                          hintStyle: TextStyle(
+                            fontSize: 13,
+                          ),
+                          hintText: "Senha",
+                          filled: true,
+                          fillColor: Colors.white54,
                         ),
-                      ),
-                      hintStyle: TextStyle(
-                        fontSize: 13,
-                      ),
-                      hintText: "Senha",
-                      filled: true,
-                      fillColor: Colors.white54),
-                ),
+                      );
+                    }),
               ), //campo senha
               SizedBox(
                 height: 10,
@@ -79,33 +91,38 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               Container(
                 height: 45,
                 alignment: Alignment.center,
-                child: TextFormField(
-                  // campo senha
-                  obscureText: passwordConfirmationFieldVisibility,
-                  decoration: new InputDecoration(
-                      suffixIcon: IconButton(
-                        icon: (passwordConfirmationFieldVisibility
-                            ? Icon(Icons.visibility_off)
-                            : Icon(Icons.visibility)),
-                        onPressed: () {
-                          setState(() {
-                            passwordConfirmationFieldVisibility =
-                                !passwordConfirmationFieldVisibility;
-                          });
-                        },
-                      ),
-                      border: new OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(60.0),
+                child: StreamBuilder<bool>(
+                    stream: _resetPasswordBloc
+                        .passwordConfirmationFieldVisibilityOutput,
+                    initialData: true,
+                    builder: (context, snapshot) {
+                      return TextFormField(
+                        // campo senha
+                        obscureText: snapshot.data,
+                        decoration: new InputDecoration(
+                          suffixIcon: IconButton(
+                            icon: (snapshot.data
+                                ? Icon(Icons.visibility)
+                                : Icon(Icons.visibility_off)),
+                            onPressed: () {
+                              _resetPasswordBloc
+                                  .changePasswordConfirmationFieldVisibility();
+                            },
+                          ),
+                          border: new OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(60.0),
+                            ),
+                          ),
+                          hintStyle: TextStyle(
+                            fontSize: 13,
+                          ),
+                          hintText: "Confirmar Senha",
+                          filled: true,
+                          fillColor: Colors.white54,
                         ),
-                      ),
-                      hintStyle: TextStyle(
-                        fontSize: 13,
-                      ),
-                      hintText: "Confirmar Senha",
-                      filled: true,
-                      fillColor: Colors.white54),
-                ),
+                      );
+                    }),
               ),
               SizedBox(
                 height: 10,
