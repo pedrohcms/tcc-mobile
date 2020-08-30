@@ -17,17 +17,27 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size data = MediaQuery.of(context).size;
+
+    print(data);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
+        title: Text(
+          "Esqueceu sua senha?",
+          style: TextStyle(fontSize: 18, color: Colors.white),
+        ),
       ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 20, left: 40, right: 40),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Esqueceu sua senha?"),
               Container(
+                width: double.infinity,
                 height: 45,
                 alignment: Alignment.center,
                 child: TextFormField(
@@ -48,7 +58,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 ),
               ), //campo email
               SizedBox(
-                height: 10,
+                height: 20,
               ),
               Container(
                 height: 45,
@@ -86,7 +96,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     }),
               ), //campo senha
               SizedBox(
-                height: 10,
+                height: 20,
               ),
               Container(
                 height: 45,
@@ -125,10 +135,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     }),
               ),
               SizedBox(
-                height: 10,
+                height: 20,
               ),
               Container(
-                height: 30,
+                height: 35,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -158,7 +168,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 50,
               )
             ],
           ),
