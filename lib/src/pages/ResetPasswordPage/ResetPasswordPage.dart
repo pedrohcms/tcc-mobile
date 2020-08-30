@@ -195,6 +195,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         onPressed: () {
                           if (_formkey.currentState.validate()) {
                             print("deu certo");
+                            _resetPasswordBloc.resetPassword(
+                                _emailFieldController.text,
+                                _passwordFieldController.text,
+                                _passwordConfirmationFieldController.text);
                           }
                         }),
                   ),
