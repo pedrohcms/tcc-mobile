@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/src/pages/ResetPasswordPage/ResetPasswordBloc.dart';
 
@@ -55,6 +56,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     filled: true,
                     fillColor: Colors.white54,
                   ),
+                  validator: (value) {
+                    if (value.isEmpty || !EmailValidator.validate(value)) {
+                      return 'Por favor inserir um campo de E-mail válido';
+                    }
+                    return null;
+                  },
                 ),
               ), //campo email
               SizedBox(
