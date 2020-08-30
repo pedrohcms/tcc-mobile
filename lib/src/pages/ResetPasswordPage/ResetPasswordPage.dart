@@ -9,6 +9,11 @@ class ResetPasswordPage extends StatefulWidget {
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   final ResetPasswordBloc _resetPasswordBloc = new ResetPasswordBloc();
+  final _formkey = GlobalKey<FormState>();
+
+  final _emailFieldController = TextEditingController();
+  final _passwordFieldController = TextEditingController();
+  final _passwordConfirmationFieldController = TextEditingController();
 
   @override
   void dispose() {
@@ -29,151 +34,176 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 20, left: 40, right: 40),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: double.infinity,
-                height: 45,
-                alignment: Alignment.center,
-                child: TextFormField(
-                  // campo email
-                  decoration: new InputDecoration(
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(60.0),
+          child: Form(
+            key: _formkey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  child: TextFormField(
+                    // campo email
+                    decoration: new InputDecoration(
+                      border: new OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(60.0),
+                        ),
                       ),
-                    ),
-                    hintStyle: TextStyle(
-                      fontSize: 13,
-                    ),
-                    hintText: "E-mail",
-                    filled: true,
-                    fillColor: Colors.white54,
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty || !EmailValidator.validate(value)) {
-                      return 'Por favor inserir um campo de E-mail válido';
-                    }
-                    return null;
-                  },
-                ),
-              ), //campo email
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                height: 45,
-                alignment: Alignment.center,
-                child: StreamBuilder<bool>(
-                    stream: _resetPasswordBloc.passwordFieldVisibilityOutput,
-                    initialData: true,
-                    builder: (context, snapshot) {
-                      return TextFormField(
-                        // campo senha
-                        obscureText: snapshot.data,
-                        decoration: new InputDecoration(
-                          suffixIcon: IconButton(
-                            icon: (snapshot.data
-                                ? Icon(Icons.visibility)
-                                : Icon(Icons.visibility_off)),
-                            onPressed: () {
-                              _resetPasswordBloc
-                                  .changePasswordFieldVisibility();
-                            },
-                          ),
-                          border: new OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              const Radius.circular(60.0),
-                            ),
-                          ),
-                          hintStyle: TextStyle(
-                            fontSize: 13,
-                          ),
-                          hintText: "Senha",
-                          filled: true,
-                          fillColor: Colors.white54,
-                        ),
-                      );
-                    }),
-              ), //campo senha
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                height: 45,
-                alignment: Alignment.center,
-                child: StreamBuilder<bool>(
-                    stream: _resetPasswordBloc
-                        .passwordConfirmationFieldVisibilityOutput,
-                    initialData: true,
-                    builder: (context, snapshot) {
-                      return TextFormField(
-                        // campo senha
-                        obscureText: snapshot.data,
-                        decoration: new InputDecoration(
-                          suffixIcon: IconButton(
-                            icon: (snapshot.data
-                                ? Icon(Icons.visibility)
-                                : Icon(Icons.visibility_off)),
-                            onPressed: () {
-                              _resetPasswordBloc
-                                  .changePasswordConfirmationFieldVisibility();
-                            },
-                          ),
-                          border: new OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              const Radius.circular(60.0),
-                            ),
-                          ),
-                          hintStyle: TextStyle(
-                            fontSize: 13,
-                          ),
-                          hintText: "Confirmar Senha",
-                          filled: true,
-                          fillColor: Colors.white54,
-                        ),
-                      );
-                    }),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                height: 35,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.bottomRight,
-                    stops: [0.3, 1],
-                    colors: [
-                      Color.fromRGBO(0, 0, 255, 100),
-                      Color.fromRGBO(0, 0, 139, 100),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(60),
-                  ),
-                ),
-                child: SizedBox.expand(
-                  child: FlatButton(
-                      child: Text(
-                        "Salvar",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                        ),
-                        textAlign: TextAlign.center,
+                      hintStyle: TextStyle(
+                        fontSize: 13,
+                        height: 1,
                       ),
-                      onPressed: () {}),
+                      hintText: "E-mail",
+                      filled: true,
+                      fillColor: Colors.white54,
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty || !EmailValidator.validate(value)) {
+                        return 'Por favor, insira um campo de E-mail válido.';
+                      }
+                      return null;
+                    },
+                    controller: _emailFieldController,
+                  ),
+                ), //campo email
+                SizedBox(
+                  height: 20,
                 ),
-              ),
-              SizedBox(
-                height: 50,
-              )
-            ],
+                Container(
+                  alignment: Alignment.center,
+                  child: StreamBuilder<bool>(
+                      stream: _resetPasswordBloc.passwordFieldVisibilityOutput,
+                      initialData: true,
+                      builder: (context, snapshot) {
+                        return TextFormField(
+                          // campo senha
+                          obscureText: snapshot.data,
+                          decoration: new InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: (snapshot.data
+                                  ? Icon(Icons.visibility)
+                                  : Icon(Icons.visibility_off)),
+                              onPressed: () {
+                                _resetPasswordBloc
+                                    .changePasswordFieldVisibility();
+                              },
+                            ),
+                            border: new OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(60.0),
+                              ),
+                            ),
+                            hintStyle: TextStyle(
+                              fontSize: 13,
+                              height: 1,
+                            ),
+                            hintText: "Senha",
+                            filled: true,
+                            fillColor: Colors.white54,
+                          ),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Insira uma senha válida.';
+                            }
+                            return null;
+                          },
+                          controller: _passwordFieldController,
+                        );
+                      }),
+                ), //campo senha
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  child: StreamBuilder<bool>(
+                      stream: _resetPasswordBloc
+                          .passwordConfirmationFieldVisibilityOutput,
+                      initialData: true,
+                      builder: (context, snapshot) {
+                        return TextFormField(
+                          // campo senha
+                          obscureText: snapshot.data,
+                          decoration: new InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: (snapshot.data
+                                  ? Icon(Icons.visibility)
+                                  : Icon(Icons.visibility_off)),
+                              onPressed: () {
+                                _resetPasswordBloc
+                                    .changePasswordConfirmationFieldVisibility();
+                              },
+                            ),
+                            border: new OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(60.0),
+                              ),
+                            ),
+                            hintStyle: TextStyle(
+                              fontSize: 13,
+                              height: 1,
+                            ),
+                            hintText: "Confirmar Senha",
+                            filled: true,
+                            fillColor: Colors.white54,
+                          ),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Por favor, insira uma senha válida.';
+                            } else if (_passwordFieldController.text !=
+                                _passwordConfirmationFieldController.text) {
+                              return 'O valor dos campos de senha devem ser iguais.';
+                            }
+                            return null;
+                          },
+                          controller: _passwordConfirmationFieldController,
+                        );
+                      }),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  height: 35,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.bottomRight,
+                      stops: [0.3, 1],
+                      colors: [
+                        Color.fromRGBO(0, 0, 255, 100),
+                        Color.fromRGBO(0, 0, 139, 100),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(60),
+                    ),
+                  ),
+                  child: SizedBox.expand(
+                    child: FlatButton(
+                        child: Text(
+                          "Salvar",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        onPressed: () {
+                          if (_formkey.currentState.validate()) {
+                            print("deu certo");
+                          }
+                        }),
+                  ),
+                ),
+                SizedBox(
+                  height: 50,
+                )
+              ],
+            ),
           ),
         ),
       ),
