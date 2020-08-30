@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:email_validator/email_validator.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,99 +45,125 @@ class LoginPage extends StatelessWidget {
             SizedBox(
               height: 80,
             ), //espaço entre a imagem e o campo de texto
-            Container(
-              height: 45,
-              alignment: Alignment.center,
-              child: TextField(
-                // campo email
-                decoration: new InputDecoration(
-                  border: new OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(60.0),
+
+            Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      child: TextFormField(
+                        // campo email
+                        decoration: new InputDecoration(
+                          border: new OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(60.0),
+                            ),
+                          ),
+                          hintStyle: TextStyle(
+                            fontSize: 13,
+                            height: 1,
+                          ),
+                          hintText: "E-mail",
+                          filled: true,
+                          fillColor: Colors.white54,
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty ||
+                              !EmailValidator.validate(value)) {
+                            return 'Por favor inserir um campo de E-mail válido';
+                          }
+                          return null;
+                        },
+                      ),
+                    ), //campo email
+                    SizedBox(
+                      height: 30,
                     ),
-                  ),
-                  hintStyle: TextStyle(
-                    fontSize: 13,
-                  ),
-                  hintText: "E-mail",
-                  filled: true,
-                  fillColor: Colors.white54,
-                ),
-              ),
-            ), //campo email
-            SizedBox(
-              height: 30,
-            ),
-            Container(
-              height: 45,
-              alignment: Alignment.center,
-              child: TextField(
-                // campo senha
-                decoration: new InputDecoration(
-                  border: new OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(60.0),
+                    Container(
+                      alignment: Alignment.center,
+                      child: TextFormField(
+                        // campo senha
+                        decoration: new InputDecoration(
+                          border: new OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(60.0),
+                            ),
+                          ),
+                          hintStyle: TextStyle(
+                            fontSize: 13,
+                            height: 1,
+                          ),
+                          hintText: "Senha",
+                          filled: true,
+                          fillColor: Colors.white54,
+                        ),
+                        //campo
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Por favor inserir a senha correta';
+                          }
+                          return null;
+                        },
+                      ),
                     ),
-                  ),
-                  hintStyle: TextStyle(
-                    fontSize: 13,
-                  ),
-                  hintText: "Senha",
-                  filled: true,
-                  fillColor: Colors.white54,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ), //campo senha
-            Container(
-              height: 40,
-              alignment: Alignment.center,
-              child: FlatButton(
-                child: Text(
-                  "Recuperar Senha",
-                  textAlign: TextAlign.center,
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/reset_password');
-                },
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              height: 30,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.bottomRight,
-                  stops: [0.3, 1],
-                  colors: [
-                    Color.fromRGBO(0, 0, 255, 100),
-                    Color.fromRGBO(0, 0, 252, 150),
+                    SizedBox(
+                      height: 20,
+                    ), //campo senha
+                    Container(
+                      height: 40,
+                      alignment: Alignment.center,
+                      child: FlatButton(
+                        child: Text(
+                          "Recuperar Senha",
+                          textAlign: TextAlign.center,
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/reset_password');
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      height: 30,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.bottomRight,
+                          stops: [0.3, 1],
+                          colors: [
+                            Color.fromRGBO(0, 0, 255, 100),
+                            Color.fromRGBO(0, 0, 252, 150),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(60),
+                        ),
+                      ),
+                      child: SizedBox.expand(
+                        child: FlatButton(
+                          child: Text(
+                            "Entrar",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              print("deu certo");
+                            }
+                          },
+                        ),
+                      ),
+                    ),
                   ],
-                ),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(60),
-                ),
-              ),
-              child: SizedBox.expand(
-                child: FlatButton(
-                  child: Text(
-                    "Entrar",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  onPressed: () {},
-                ),
-              ),
-            ),
+                )),
+
             SizedBox(
               height: 10,
             ),
