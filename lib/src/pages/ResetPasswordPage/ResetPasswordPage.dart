@@ -17,10 +17,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size data = MediaQuery.of(context).size;
-
-    print(data);
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
