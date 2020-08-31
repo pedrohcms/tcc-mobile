@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:mobile/src/pages/LoginPage/LoginBloc.dart';
@@ -159,6 +160,27 @@ class _LoginPageState extends State<LoginPage> {
                             textAlign: TextAlign.center,
                           ),
                           onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (_) => new CupertinoAlertDialog(
+                                      title: new Text("Erro"),
+                                      content: new Text(
+                                          "O tempo de conexão foi excedido"),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('Cancelar'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        FlatButton(
+                                          child: Text('Tentar Novamente'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    ));
                             if (_formKey.currentState.validate()) {
                               print("deu certo");
                               _loginBloc.login(_emailFieldController.text,
