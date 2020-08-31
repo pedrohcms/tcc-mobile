@@ -31,15 +31,22 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           style: TextStyle(fontSize: 18, color: Colors.white),
         ),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(top: 20, left: 40, right: 40),
+          padding: const EdgeInsets.only(top: 1, left: 40, right: 40),
           child: Form(
             key: _formkey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                SizedBox(
+                  width: 400,
+                  height: 300,
+                  child: Image(
+                    image: AssetImage('images/recu_senha.png'),
+                  ),
+                ),
                 Container(
                   width: double.infinity,
                   alignment: Alignment.center,
@@ -166,7 +173,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   height: 20,
                 ),
                 Container(
-                  height: 35,
+                  height: 50,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(

@@ -70,3 +70,4 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
     - images/logo.png
+    - images/recu_senha.png
