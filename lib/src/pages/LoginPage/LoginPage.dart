@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:mobile/src/pages/LoginPage/LoginBloc.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -8,7 +9,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-
+  final LoginBloc _loginBloc = new LoginBloc();
+  final _emailFieldController = TextEditingController();
+  final _passwordFieldController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                           }
                           return null;
                         },
+                        controller: _emailFieldController,
                       ),
                     ), //campo email
                     SizedBox(
@@ -105,6 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                           }
                           return null;
                         },
+                        controller: _passwordFieldController,
                       ),
                     ),
                     SizedBox(
@@ -156,6 +161,8 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
                               print("deu certo");
+                              _loginBloc.login(_emailFieldController.text,
+                                  _passwordFieldController.text);
                             }
                           },
                         ),
