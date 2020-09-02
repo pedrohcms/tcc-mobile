@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/src/components/AlertBoxComponent.dart';
 import 'package:mobile/src/pages/ResetPasswordPage/ResetPasswordBloc.dart';
 
 class ResetPasswordPage extends StatefulWidget {
@@ -199,13 +200,21 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formkey.currentState.validate()) {
                             print("deu certo");
-                            _resetPasswordBloc.resetPassword(
-                                _emailFieldController.text,
-                                _passwordFieldController.text,
-                                _passwordConfirmationFieldController.text);
+                            Map<String, String> result =
+                                await _resetPasswordBloc.resetPassword(
+                                    _emailFieldController.text,
+                                    _passwordFieldController.text,
+                                    _passwordConfirmationFieldController.text);
+
+                            if (result['title'] == 'Erro') {
+                              showDialog(
+                                context: context,
+                                builder: (_) => AlertBoxComponent(data: result),
+                              );
+                            }
                           }
                         }),
                   ),
