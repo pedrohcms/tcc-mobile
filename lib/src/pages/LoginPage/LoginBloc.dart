@@ -8,6 +8,15 @@ import 'package:mobile/src/services/ApiService.dart';
 import 'package:mobile/src/services/TokenService.dart';
 
 class LoginBloc extends ChangeNotifier {
+  bool passwordFieldVisibility = true;
+
+  final StreamController<bool> _passwordFieldVisibilityController =
+      StreamController<bool>();
+  Sink<bool> get passwordFieldVisibilityInput =>
+      _passwordFieldVisibilityController.sink;
+  Stream<bool> get passwordFieldVisibilityOutput =>
+      _passwordFieldVisibilityController.stream;
+
   Future<Map<String, String>> login(String email, String password) async {
     ApiService apiService = new ApiService();
 
@@ -51,5 +60,19 @@ class LoginBloc extends ChangeNotifier {
 
     result['title'] = 'Sucesso';
     return result;
+  }
+
+  @override
+  void dispose() {
+    _passwordFieldVisibilityController.close();
+
+    super.dispose();
+  }
+
+  void changePasswordFieldVisibility() {
+    passwordFieldVisibility = !passwordFieldVisibility;
+    passwordFieldVisibilityInput.add(passwordFieldVisibility);
+
+    notifyListeners();
   }
 }

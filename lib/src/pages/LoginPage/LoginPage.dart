@@ -90,31 +90,45 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Container(
                     alignment: Alignment.center,
-                    child: TextFormField(
-                      // campo senha
-                      decoration: new InputDecoration(
-                        border: new OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(
-                            const Radius.circular(60.0),
-                          ),
-                        ),
-                        hintStyle: TextStyle(
-                          fontSize: 13,
-                          height: 1,
-                        ),
-                        hintText: "Senha",
-                        filled: true,
-                        fillColor: Colors.white54,
-                      ),
-                      //campo
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Por favor inserir a senha correta';
-                        }
-                        return null;
-                      },
-                      controller: _passwordFieldController,
-                    ),
+                    child: StreamBuilder<bool>(
+                        stream: _loginBloc.passwordFieldVisibilityOutput,
+                        initialData: true,
+                        builder: (context, snapshot) {
+                          return TextFormField(
+                            // campo senha
+                            obscureText: snapshot.data,
+                            decoration: new InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: (snapshot.data
+                                    ? Icon(Icons.visibility)
+                                    : Icon(Icons.visibility_off)),
+                                onPressed: () {
+                                  _loginBloc.changePasswordFieldVisibility();
+                                },
+                              ),
+                              border: new OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(60.0),
+                                ),
+                              ),
+                              hintStyle: TextStyle(
+                                fontSize: 13,
+                                height: 1,
+                              ),
+                              hintText: "Senha",
+                              filled: true,
+                              fillColor: Colors.white54,
+                            ),
+                            //campo
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Por favor inserir a senha correta';
+                              }
+                              return null;
+                            },
+                            controller: _passwordFieldController,
+                          );
+                        }),
                   ),
                   SizedBox(
                     height: 20,
@@ -129,6 +143,20 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       onPressed: () {
                         Navigator.pushNamed(context, '/reset_password');
+                      },
+                    ),
+                  ),
+
+                  Container(
+                    height: 40,
+                    alignment: Alignment.center,
+                    child: FlatButton(
+                      child: Text(
+                        "cadastro fazenda",
+                        textAlign: TextAlign.center,
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/cadastro_fazenda');
                       },
                     ),
                   ),

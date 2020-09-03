@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/src/pages/CadastroFazenda/CadastroFazendaPage.dart';
 import 'package:mobile/src/pages/LoginPage/LoginPage.dart';
 import 'package:mobile/src/pages/ResetPasswordPage/ResetPasswordPage.dart';
 
@@ -12,7 +13,8 @@ class App extends StatelessWidget {
       ),
       routes: {
         "/": (context) => LoginPage(),
-        "/reset_password": (context) => ResetPasswordPage()
+        "/reset_password": (context) => ResetPasswordPage(),
+        "/cadastro_fazenda": (context) => CadastroFazendaPage()
       },
     );
   }

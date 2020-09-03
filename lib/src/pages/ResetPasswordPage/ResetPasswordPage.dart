@@ -202,19 +202,16 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         ),
                         onPressed: () async {
                           if (_formkey.currentState.validate()) {
-                            print("deu certo");
+                            print("Deu certo");
                             Map<String, String> result =
                                 await _resetPasswordBloc.resetPassword(
                                     _emailFieldController.text,
                                     _passwordFieldController.text,
                                     _passwordConfirmationFieldController.text);
-
-                            if (result['title'] == 'Erro') {
-                              showDialog(
-                                context: context,
-                                builder: (_) => AlertBoxComponent(data: result),
-                              );
-                            }
+                            showDialog(
+                              context: context,
+                              builder: (_) => AlertBoxComponent(data: result),
+                            );
                           }
                         }),
                   ),
