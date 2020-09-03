@@ -147,19 +147,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
 
-                  Container(
-                    height: 40,
-                    alignment: Alignment.center,
-                    child: FlatButton(
-                      child: Text(
-                        "cadastro fazenda",
-                        textAlign: TextAlign.center,
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/cadastro_fazenda');
-                      },
-                    ),
-                  ),
                   SizedBox(
                     height: 20,
                   ),
