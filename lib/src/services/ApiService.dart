@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 
 class ApiService {
   final Client _client = new Client();
-  final String _baseUrl = 'http://192.168.1.105:3333/v1';
+  final String _baseUrl = 'http://10.0.0.167:3333/v1';
   final int _timeOut = 5;
 
   /// Responsible for making the request to the API
@@ -36,6 +36,7 @@ class ApiService {
     }
 
     headers['Content-Type'] = 'application/json; charset=utf-8';
+    headers['Accept-Language'] = 'pt-BR';
 
     Response response;
 

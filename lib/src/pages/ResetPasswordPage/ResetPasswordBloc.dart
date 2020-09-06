@@ -47,7 +47,7 @@ class ResetPasswordBloc extends ChangeNotifier {
       "password": password,
       "confirm_password": confirmPassword
     };
-    Map<String, String> result = {'title': 'Mensagem', 'message': ''};
+    Map<String, String> result = {'title': 'Erro', 'message': ''};
 
     Response response;
 
@@ -58,7 +58,16 @@ class ResetPasswordBloc extends ChangeNotifier {
           body: jsonEncode(body));
       print(response.statusCode);
       print(response.body);
-      result["message"] = response.body;
+
+      switch (response.statusCode) {
+        case 200:
+          result['title'] = 'Sucesso';
+          result['message'] = 'Senha atualizada com sucesso';
+          break;
+        case 400:
+          result['message'] = jsonDecode(response.body)['error'];
+          break;
+      }
     } on SocketException {
       result["message"] = 'O dispositivo está sem internet';
       return result;

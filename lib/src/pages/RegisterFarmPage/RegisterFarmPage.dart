@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CadastroFazendaPage extends StatefulWidget {
+class RegisterFarmPage extends StatefulWidget {
   @override
-  _CadastroFazendaPageState createState() => _CadastroFazendaPageState();
+  _RegisterFarmPageState createState() => _RegisterFarmPageState();
 }
 
-class _CadastroFazendaPageState extends State<CadastroFazendaPage> {
+class _RegisterFarmPageState extends State<RegisterFarmPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailFieldController = TextEditingController();
 
@@ -16,7 +16,7 @@ class _CadastroFazendaPageState extends State<CadastroFazendaPage> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
-          "Cadastro Fazenda",
+          "Cadastro de Fazenda",
           style: TextStyle(
             fontSize: 18,
             color: Colors.white,

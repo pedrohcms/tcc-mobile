@@ -188,8 +188,9 @@ class _LoginPageState extends State<LoginPage> {
                                 context: context,
                                 builder: (_) => AlertBoxComponent(data: result),
                               );
+                            } else {
+                              Navigator.pushNamed(context, '/register_farm');
                             }
-                            print('Deu certo');
                           }
                         },
                       ),
