@@ -25,6 +25,11 @@ class ResetPasswordBloc extends ChangeNotifier {
   Stream<bool> get passwordConfirmationFieldVisibilityOutput =>
       _passwordConfirmationFieldVisibilityController.stream;
 
+  // STREAM PARA CONTROLLAR O LOADING
+  final StreamController<bool> _isLoadingController = StreamController<bool>();
+  Sink<bool> get isLoadingInput => _isLoadingController.sink;
+  Stream<bool> get isLoadingOutput => _isLoadingController.stream;
+
   void changePasswordFieldVisibility() {
     passwordFieldVisibility = !passwordFieldVisibility;
     passwordFieldVisibilityInput.add(passwordFieldVisibility);
@@ -42,22 +47,26 @@ class ResetPasswordBloc extends ChangeNotifier {
 
   Future<Map<String, String>> resetPassword(
       email, String password, String confirmPassword) async {
+    // SINALIZA PARA A TELA MOSTRAR O CARREGAMENTO
+    isLoadingInput.add(true);
+
     ApiService apiService = new ApiService();
+
     Map<String, dynamic> body = {
       "password": password,
       "confirm_password": confirmPassword
     };
+
     Map<String, String> result = {'title': 'Erro', 'message': ''};
 
     Response response;
 
     try {
       response = await apiService.makeRequest(
-          method: "POST",
-          uri: "reset_passwords/$email",
-          body: jsonEncode(body));
-      print(response.statusCode);
-      print(response.body);
+        method: "POST",
+        uri: "reset_passwords/$email",
+        body: jsonEncode(body),
+      );
 
       switch (response.statusCode) {
         case 200:
@@ -70,16 +79,14 @@ class ResetPasswordBloc extends ChangeNotifier {
       }
     } on SocketException {
       result["message"] = 'O dispositivo está sem internet';
-      return result;
     } on TimeoutException {
       result['message'] = 'O tempo de conexão foi excedido';
-
-      return result;
     } on HttpException {
       result['message'] = 'Erro no servidor';
-
-      return result;
     }
+
+    // SINALIZA PARA A TELA MOSTRAR O CARREGAMENTO
+    isLoadingInput.add(false);
     return result;
   }
 
@@ -87,6 +94,7 @@ class ResetPasswordBloc extends ChangeNotifier {
   void dispose() {
     _passwordFieldVisibilityController.close();
     _passwordConfirmationFieldVisibilityController.close();
+    _isLoadingController.close();
     super.dispose();
   }
 }

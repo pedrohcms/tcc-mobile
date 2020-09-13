@@ -18,6 +18,12 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordFieldController = TextEditingController();
 
   @override
+  void dispose() {
+    _loginBloc.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -53,7 +59,6 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 80,
             ), //espaço entre a imagem e o campo de texto
-
             Form(
               key: _formKey,
               child: Column(
@@ -169,13 +174,27 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     child: SizedBox.expand(
                       child: FlatButton(
-                        child: Text(
-                          "Entrar",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                          ),
-                          textAlign: TextAlign.center,
+                        child: StreamBuilder<bool>(
+                          stream: _loginBloc.isLoadingOutput,
+                          initialData: false,
+                          builder: (context, snapshot) {
+                            if (!snapshot.data) {
+                              return Text(
+                                "Entrar",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                ),
+                                textAlign: TextAlign.center,
+                              );
+                            }
+
+                            return CircularProgressIndicator(
+                              backgroundColor: Colors.grey,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            );
+                          },
                         ),
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {

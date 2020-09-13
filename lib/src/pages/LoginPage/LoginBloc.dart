@@ -17,7 +17,15 @@ class LoginBloc extends ChangeNotifier {
   Stream<bool> get passwordFieldVisibilityOutput =>
       _passwordFieldVisibilityController.stream;
 
+  // STREAM PARA CONTROLLAR O LOADING
+  final StreamController<bool> _isLoadingController = StreamController<bool>();
+  Sink<bool> get isLoadingInput => _isLoadingController.sink;
+  Stream<bool> get isLoadingOutput => _isLoadingController.stream;
+
   Future<Map<String, String>> login(String email, String password) async {
+    // SINALIZA PARA A TELA MOSTRAR O CARREGAMENTO
+    isLoadingInput.add(true);
+
     ApiService apiService = new ApiService();
 
     Map<String, dynamic> body = {
@@ -32,39 +40,35 @@ class LoginBloc extends ChangeNotifier {
     try {
       response = await apiService.makeRequest(
           method: "POST", uri: "sessions", body: jsonEncode(body));
+
+      Map<String, dynamic> responseBody = jsonDecode(response.body);
+
+      if (response.statusCode == 400) {
+        result['message'] = responseBody['error'];
+      } else {
+        TokenService tokenService = new TokenService();
+
+        tokenService.setToken(responseBody["token"]);
+
+        result['title'] = 'Sucesso';
+      }
     } on SocketException {
       result['message'] = 'O dispositivo está sem internet';
-
-      return result;
     } on TimeoutException {
       result['message'] = 'O tempo de conexão foi excedido';
-
-      return result;
     } on HttpException {
       result['message'] = 'Erro no servidor';
-
-      return result;
     }
 
-    Map<String, dynamic> responseBody = jsonDecode(response.body);
-
-    if (response.statusCode == 400) {
-      result['message'] = responseBody['error'];
-
-      return result;
-    }
-
-    TokenService tokenService = new TokenService();
-
-    tokenService.setToken(responseBody["token"]);
-
-    result['title'] = 'Sucesso';
+    // SINALIZA PARA A TELA ESCONDER O CARREGAMENTO
+    isLoadingInput.add(false);
     return result;
   }
 
   @override
   void dispose() {
     _passwordFieldVisibilityController.close();
+    _isLoadingController.close();
 
     super.dispose();
   }
