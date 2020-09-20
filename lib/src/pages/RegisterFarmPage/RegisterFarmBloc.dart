@@ -18,11 +18,7 @@ class RegisterFarmBloc extends ChangeNotifier {
 
     ApiService apiService = new ApiService();
 
-    Map<String, dynamic> body = {
-      "user_id": 5,
-      "name": name,
-      "address": address
-    };
+    Map<String, dynamic> body = {"name": name, "address": address};
 
     AlertBoxDTO alertBoxDTO = new AlertBoxDTO();
 
