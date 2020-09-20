@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
+import 'package:mobile/src/DTOs/AlertBoxDTO.dart';
 import 'package:mobile/src/services/ApiService.dart';
 
 class ResetPasswordBloc extends ChangeNotifier {
@@ -45,7 +46,7 @@ class ResetPasswordBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Map<String, String>> resetPassword(
+  Future<AlertBoxDTO> resetPassword(
       email, String password, String confirmPassword) async {
     // SINALIZA PARA A TELA MOSTRAR O CARREGAMENTO
     isLoadingInput.add(true);
@@ -57,7 +58,7 @@ class ResetPasswordBloc extends ChangeNotifier {
       "confirm_password": confirmPassword
     };
 
-    Map<String, String> result = {'title': 'Erro', 'message': ''};
+    AlertBoxDTO alertBoxDTO = new AlertBoxDTO();
 
     Response response;
 
@@ -70,24 +71,25 @@ class ResetPasswordBloc extends ChangeNotifier {
 
       switch (response.statusCode) {
         case 200:
-          result['title'] = 'Sucesso';
-          result['message'] = 'Senha atualizada com sucesso';
+          alertBoxDTO.title = 'Sucesso';
+          alertBoxDTO.message = 'Senha atualizada com sucesso';
           break;
         case 400:
-          result['message'] = jsonDecode(response.body)['error'];
+          alertBoxDTO.message = jsonDecode(response.body)['error'];
           break;
       }
     } on SocketException {
-      result["message"] = 'O dispositivo está sem internet';
+      alertBoxDTO.message = 'O dispositivo está sem internet';
     } on TimeoutException {
-      result['message'] = 'O tempo de conexão foi excedido';
+      alertBoxDTO.message = 'O tempo de conexão foi excedido';
     } on HttpException {
-      result['message'] = 'Erro no servidor';
+      alertBoxDTO.message = 'Erro no servidor';
     }
 
-    // SINALIZA PARA A TELA MOSTRAR O CARREGAMENTO
+    // SINALIZA PARA A TELA ESCONDER O CARREGAMENTO
     isLoadingInput.add(false);
-    return result;
+
+    return alertBoxDTO;
   }
 
   @override

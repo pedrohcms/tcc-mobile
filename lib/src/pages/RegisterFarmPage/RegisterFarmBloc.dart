@@ -1,37 +1,27 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:mobile/src/DTOs/AlertBoxDTO.dart';
 import 'package:mobile/src/services/ApiService.dart';
-import 'package:mobile/src/services/TokenService.dart';
 
-class LoginBloc extends ChangeNotifier {
-  bool passwordFieldVisibility = true;
-
-  final StreamController<bool> _passwordFieldVisibilityController =
-      StreamController<bool>();
-  Sink<bool> get passwordFieldVisibilityInput =>
-      _passwordFieldVisibilityController.sink;
-  Stream<bool> get passwordFieldVisibilityOutput =>
-      _passwordFieldVisibilityController.stream;
-
+class RegisterFarmBloc extends ChangeNotifier {
   // STREAM PARA CONTROLLAR O LOADING
   final StreamController<bool> _isLoadingController = StreamController<bool>();
   Sink<bool> get isLoadingInput => _isLoadingController.sink;
   Stream<bool> get isLoadingOutput => _isLoadingController.stream;
 
-  Future<AlertBoxDTO> login(String email, String password) async {
+  Future<AlertBoxDTO> store(String name, String address) async {
     // SINALIZA PARA A TELA MOSTRAR O CARREGAMENTO
-    isLoadingInput.add(true);
+    _isLoadingController.add(true);
 
     ApiService apiService = new ApiService();
 
     Map<String, dynamic> body = {
-      "email": email,
-      "password": password,
+      "user_id": 5,
+      "name": name,
+      "address": address
     };
 
     AlertBoxDTO alertBoxDTO = new AlertBoxDTO();
@@ -40,18 +30,28 @@ class LoginBloc extends ChangeNotifier {
 
     try {
       response = await apiService.makeRequest(
-          method: "POST", uri: "sessions", body: jsonEncode(body));
+        method: "POST",
+        body: jsonEncode(body),
+        uri: "/farms",
+        sendToken: true,
+      );
 
-      Map<String, dynamic> responseBody = jsonDecode(response.body);
-
-      if (response.statusCode == 400) {
-        alertBoxDTO.message = responseBody['error'];
-      } else {
-        TokenService tokenService = new TokenService();
-
-        tokenService.setToken(responseBody["token"]);
-
-        alertBoxDTO.title = "Sucesso";
+      switch (response.statusCode) {
+        case 201:
+          alertBoxDTO.title = 'Sucesso';
+          alertBoxDTO.message = 'Fazenda cadastrada com sucesso';
+          break;
+        case 400:
+          alertBoxDTO.message = jsonDecode(response.body)['error'];
+          break;
+        case 401:
+          alertBoxDTO.message =
+              'Sua sessão expirou por favor faça o login novamente';
+          alertBoxDTO.sendToLogin = true;
+          break;
+        case 403:
+          alertBoxDTO.message = 'O usuário não tem permissão para isso';
+          break;
       }
     } on SocketException {
       alertBoxDTO.message = 'O dispositivo está sem internet';
@@ -69,16 +69,7 @@ class LoginBloc extends ChangeNotifier {
 
   @override
   void dispose() {
-    _passwordFieldVisibilityController.close();
     _isLoadingController.close();
-
     super.dispose();
-  }
-
-  void changePasswordFieldVisibility() {
-    passwordFieldVisibility = !passwordFieldVisibility;
-    passwordFieldVisibilityInput.add(passwordFieldVisibility);
-
-    notifyListeners();
   }
 }
