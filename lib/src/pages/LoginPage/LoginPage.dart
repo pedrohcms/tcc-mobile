@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:mobile/src/DTOs/AlertBoxDTO.dart';
 import 'package:mobile/src/components/AlertBoxComponent.dart';
 import 'package:mobile/src/pages/LoginPage/LoginBloc.dart';
 
@@ -16,6 +17,12 @@ class _LoginPageState extends State<LoginPage> {
 
   final _emailFieldController = TextEditingController();
   final _passwordFieldController = TextEditingController();
+
+  @override
+  void dispose() {
+    _loginBloc.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +60,6 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 80,
             ), //espaço entre a imagem e o campo de texto
-
             Form(
               key: _formKey,
               child: Column(
@@ -169,21 +175,35 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     child: SizedBox.expand(
                       child: FlatButton(
-                        child: Text(
-                          "Entrar",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                          ),
-                          textAlign: TextAlign.center,
+                        child: StreamBuilder<bool>(
+                          stream: _loginBloc.isLoadingOutput,
+                          initialData: false,
+                          builder: (context, snapshot) {
+                            if (!snapshot.data) {
+                              return Text(
+                                "Entrar",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                ),
+                                textAlign: TextAlign.center,
+                              );
+                            }
+
+                            return CircularProgressIndicator(
+                              backgroundColor: Colors.grey,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            );
+                          },
                         ),
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
-                            Map<String, String> result = await _loginBloc.login(
+                            AlertBoxDTO result = await _loginBloc.login(
                                 _emailFieldController.text,
                                 _passwordFieldController.text);
 
-                            if (result['title'] == 'Erro') {
+                            if (result.title == 'Erro') {
                               showDialog(
                                 context: context,
                                 builder: (_) => AlertBoxComponent(data: result),

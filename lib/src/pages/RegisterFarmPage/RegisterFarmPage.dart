@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/src/DTOs/AlertBoxDTO.dart';
+import 'package:mobile/src/components/AlertBoxComponent.dart';
+import 'package:mobile/src/pages/RegisterFarmPage/RegisterFarmBloc.dart';
 
 class RegisterFarmPage extends StatefulWidget {
   @override
@@ -7,8 +10,11 @@ class RegisterFarmPage extends StatefulWidget {
 }
 
 class _RegisterFarmPageState extends State<RegisterFarmPage> {
+  final RegisterFarmBloc _registerFarmBloc = new RegisterFarmBloc();
+
   final _formKey = GlobalKey<FormState>();
-  final _emailFieldController = TextEditingController();
+  final _nameFieldController = TextEditingController();
+  final _addressFieldController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +81,7 @@ class _RegisterFarmPageState extends State<RegisterFarmPage> {
                         }
                         return null;
                       },
-                      controller: _emailFieldController,
+                      controller: _nameFieldController,
                     ),
                   ), //campo email
                   SizedBox(
@@ -106,6 +112,7 @@ class _RegisterFarmPageState extends State<RegisterFarmPage> {
                         }
                         return null;
                       },
+                      controller: _addressFieldController,
                     ),
                   ),
                   SizedBox(
@@ -134,20 +141,42 @@ class _RegisterFarmPageState extends State<RegisterFarmPage> {
                     ),
                     child: SizedBox.expand(
                       child: FlatButton(
-                        child: Text(
-                          "Enviar",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                          ),
-                          textAlign: TextAlign.center,
+                        child: StreamBuilder<bool>(
+                          stream: _registerFarmBloc.isLoadingOutput,
+                          initialData: false,
+                          builder: (context, snapshot) {
+                            if (!snapshot.data) {
+                              return Text(
+                                "Enviar",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                ),
+                                textAlign: TextAlign.center,
+                              );
+                            }
+
+                            return CircularProgressIndicator(
+                              backgroundColor: Colors.grey,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            );
+                          },
                         ),
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
-                            //Map<String, String> result = await _loginBloc.login(
-                            //  _emailFieldController.text,
-                            //_passwordFieldController.text);
+                            AlertBoxDTO result = await _registerFarmBloc.store(
+                              _nameFieldController.text,
+                              _addressFieldController.text,
+                            );
 
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (_) => AlertBoxComponent(
+                                data: result,
+                              ),
+                            );
                           }
                         },
                       ),

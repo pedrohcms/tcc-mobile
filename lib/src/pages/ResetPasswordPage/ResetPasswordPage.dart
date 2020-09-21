@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/src/DTOs/AlertBoxDTO.dart';
 import 'package:mobile/src/components/AlertBoxComponent.dart';
 import 'package:mobile/src/pages/ResetPasswordPage/ResetPasswordBloc.dart';
 
@@ -192,28 +193,43 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   ),
                   child: SizedBox.expand(
                     child: FlatButton(
-                        child: Text(
-                          "Salvar",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        onPressed: () async {
-                          if (_formkey.currentState.validate()) {
-                            print("Deu certo");
-                            Map<String, String> result =
-                                await _resetPasswordBloc.resetPassword(
-                                    _emailFieldController.text,
-                                    _passwordFieldController.text,
-                                    _passwordConfirmationFieldController.text);
-                            showDialog(
-                              context: context,
-                              builder: (_) => AlertBoxComponent(data: result),
+                      child: StreamBuilder<bool>(
+                        stream: _resetPasswordBloc.isLoadingOutput,
+                        initialData: false,
+                        builder: (context, snapshot) {
+                          if (!snapshot.data) {
+                            return Text(
+                              "Salvar",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
+                              textAlign: TextAlign.center,
                             );
                           }
-                        }),
+
+                          return CircularProgressIndicator(
+                            backgroundColor: Colors.grey,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          );
+                        },
+                      ),
+                      onPressed: () async {
+                        if (_formkey.currentState.validate()) {
+                          AlertBoxDTO result =
+                              await _resetPasswordBloc.resetPassword(
+                                  _emailFieldController.text,
+                                  _passwordFieldController.text,
+                                  _passwordConfirmationFieldController.text);
+
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertBoxComponent(data: result),
+                          );
+                        }
+                      },
+                    ),
                   ),
                 ),
                 SizedBox(

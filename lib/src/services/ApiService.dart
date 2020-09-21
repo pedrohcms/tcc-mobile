@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart';
+import 'package:mobile/src/services/TokenService.dart';
 
 class ApiService {
   final Client _client = new Client();
@@ -23,7 +24,8 @@ class ApiService {
       String uri,
       String body,
       Map<String, dynamic> headers,
-      Map<String, dynamic> queries}) async {
+      Map<String, dynamic> queries,
+      bool sendToken = false}) async {
     // Checking for internet connection
     await InternetAddress.lookup('google.com');
 
@@ -37,6 +39,14 @@ class ApiService {
 
     headers['Content-Type'] = 'application/json; charset=utf-8';
     headers['Accept-Language'] = 'pt-BR';
+
+    if (sendToken) {
+      TokenService tokenService = new TokenService();
+
+      String token = await tokenService.getToken() ?? "";
+
+      headers['Authorization'] = "Bearer $token";
+    }
 
     Response response;
 
