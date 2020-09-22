@@ -209,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                                 builder: (_) => AlertBoxComponent(data: result),
                               );
                             } else {
-                              Navigator.pushNamed(context, '/register_farm');
+                              Navigator.pushNamed(context, '/farm_list');
                             }
                           }
                         },

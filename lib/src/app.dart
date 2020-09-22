@@ -15,7 +15,8 @@ class App extends StatelessWidget {
       routes: {
         "/": (context) => LoginPage(),
         "/reset_password": (context) => ResetPasswordPage(),
-        "/register_farm": (context) => RegisterFarmPage()
+        "/register_farm": (context) => RegisterFarmPage(),
+        "/farm_list": (context) => FarmListPage(),
       },
     );
   }

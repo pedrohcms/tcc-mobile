@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/src/pages/FarmListPage/FarmListBloc.dart';
 
 class FarmListPage extends StatefulWidget {
   @override
@@ -6,6 +7,13 @@ class FarmListPage extends StatefulWidget {
 }
 
 class _FarmListPageState extends State<FarmListPage> {
+  final FarmListBloc _farmListBloc = new FarmListBloc();
+  @override
+  void initState() {
+    super.initState();
+    _farmListBloc.index();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
