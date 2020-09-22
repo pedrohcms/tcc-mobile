@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'package:mobile/src/pages/HomePage/HomePage.dart';
 import 'package:mobile/src/pages/FarmListPage/FarmListPage.dart';
 import 'package:mobile/src/pages/RegisterFarmPage/RegisterFarmPage.dart';
 import 'package:mobile/src/pages/LoginPage/LoginPage.dart';
@@ -17,6 +19,7 @@ class App extends StatelessWidget {
         "/reset_password": (context) => ResetPasswordPage(),
         "/register_farm": (context) => RegisterFarmPage(),
         "/farm_list": (context) => FarmListPage(),
+        "/home": (context) => HomePage(),
       },
     );
   }
