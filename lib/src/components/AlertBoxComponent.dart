@@ -1,21 +1,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/src/DTOs/AlertBoxDTO.dart';
 
 class AlertBoxComponent extends StatelessWidget {
-  final Map<String, String> data;
+  final AlertBoxDTO data;
 
   AlertBoxComponent({this.data});
 
   @override
   Widget build(BuildContext context) {
     return CupertinoAlertDialog(
-      title: new Text(this.data['title']),
-      content: new Text(this.data['message']),
+      title: new Text(this.data.title),
+      content: new Text(this.data.message),
       actions: <Widget>[
-        FlatButton(
-          child: Text('OK'),
-          onPressed: () {
-            Navigator.of(context).pop();
+        Builder(
+          builder: (context) {
+            if (this.data.sendToLogin) {
+              return FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.popUntil(
+                    context,
+                    ModalRoute.withName('/'),
+                  );
+                },
+              );
+            }
+
+            return FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            );
           },
         ),
       ],

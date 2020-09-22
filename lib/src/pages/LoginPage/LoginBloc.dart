@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
+import 'package:mobile/src/DTOs/AlertBoxDTO.dart';
 import 'package:mobile/src/services/ApiService.dart';
 import 'package:mobile/src/services/TokenService.dart';
 
@@ -22,7 +23,7 @@ class LoginBloc extends ChangeNotifier {
   Sink<bool> get isLoadingInput => _isLoadingController.sink;
   Stream<bool> get isLoadingOutput => _isLoadingController.stream;
 
-  Future<Map<String, String>> login(String email, String password) async {
+  Future<AlertBoxDTO> login(String email, String password) async {
     // SINALIZA PARA A TELA MOSTRAR O CARREGAMENTO
     isLoadingInput.add(true);
 
@@ -33,7 +34,7 @@ class LoginBloc extends ChangeNotifier {
       "password": password,
     };
 
-    Map<String, String> result = {'title': 'Erro', 'message': ''};
+    AlertBoxDTO alertBoxDTO = new AlertBoxDTO();
 
     Response response;
 
@@ -44,25 +45,26 @@ class LoginBloc extends ChangeNotifier {
       Map<String, dynamic> responseBody = jsonDecode(response.body);
 
       if (response.statusCode == 400) {
-        result['message'] = responseBody['error'];
+        alertBoxDTO.message = responseBody['error'];
       } else {
         TokenService tokenService = new TokenService();
 
         tokenService.setToken(responseBody["token"]);
 
-        result['title'] = 'Sucesso';
+        alertBoxDTO.title = "Sucesso";
       }
     } on SocketException {
-      result['message'] = 'O dispositivo está sem internet';
+      alertBoxDTO.message = 'O dispositivo está sem internet';
     } on TimeoutException {
-      result['message'] = 'O tempo de conexão foi excedido';
+      alertBoxDTO.message = 'O tempo de conexão foi excedido';
     } on HttpException {
-      result['message'] = 'Erro no servidor';
+      alertBoxDTO.message = 'Erro no servidor';
     }
 
     // SINALIZA PARA A TELA ESCONDER O CARREGAMENTO
     isLoadingInput.add(false);
-    return result;
+
+    return alertBoxDTO;
   }
 
   @override
