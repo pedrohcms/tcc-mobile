@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
-import 'package:mobile/src/DTOs/AlertBoxDTO.dart';
+import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/services/ApiService.dart';
 import 'package:mobile/src/services/TokenService.dart';
 
@@ -23,7 +23,7 @@ class LoginBloc extends ChangeNotifier {
   Sink<bool> get isLoadingInput => _isLoadingController.sink;
   Stream<bool> get isLoadingOutput => _isLoadingController.stream;
 
-  Future<AlertBoxDTO> login(String email, String password) async {
+  Future<ApiResponseDTO> login(String email, String password) async {
     // SINALIZA PARA A TELA MOSTRAR O CARREGAMENTO
     isLoadingInput.add(true);
 
@@ -34,7 +34,7 @@ class LoginBloc extends ChangeNotifier {
       "password": password,
     };
 
-    AlertBoxDTO alertBoxDTO = new AlertBoxDTO();
+    ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
 
     Response response;
 
@@ -45,26 +45,26 @@ class LoginBloc extends ChangeNotifier {
       Map<String, dynamic> responseBody = jsonDecode(response.body);
 
       if (response.statusCode == 400) {
-        alertBoxDTO.message = responseBody['error'];
+        apiResponseDTO.message = responseBody['error'];
       } else {
         TokenService tokenService = new TokenService();
 
         tokenService.setToken(responseBody["token"]);
 
-        alertBoxDTO.title = "Sucesso";
+        apiResponseDTO.title = "Sucesso";
       }
     } on SocketException {
-      alertBoxDTO.message = 'O dispositivo está sem internet';
+      apiResponseDTO.message = 'O dispositivo está sem internet';
     } on TimeoutException {
-      alertBoxDTO.message = 'O tempo de conexão foi excedido';
+      apiResponseDTO.message = 'O tempo de conexão foi excedido';
     } on HttpException {
-      alertBoxDTO.message = 'Erro no servidor';
+      apiResponseDTO.message = 'Erro no servidor';
     }
 
     // SINALIZA PARA A TELA ESCONDER O CARREGAMENTO
     isLoadingInput.add(false);
 
-    return alertBoxDTO;
+    return apiResponseDTO;
   }
 
   @override

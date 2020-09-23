@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:mobile/src/DTOs/AlertBoxDTO.dart';
+import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/components/AlertBoxComponent.dart';
 import 'package:mobile/src/pages/LoginPage/LoginBloc.dart';
 
@@ -199,7 +199,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
-                            AlertBoxDTO result = await _loginBloc.login(
+                            ApiResponseDTO result = await _loginBloc.login(
                                 _emailFieldController.text,
                                 _passwordFieldController.text);
 

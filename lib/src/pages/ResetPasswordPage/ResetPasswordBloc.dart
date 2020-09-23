@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
-import 'package:mobile/src/DTOs/AlertBoxDTO.dart';
+import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/services/ApiService.dart';
 
 class ResetPasswordBloc extends ChangeNotifier {
@@ -46,7 +46,7 @@ class ResetPasswordBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<AlertBoxDTO> resetPassword(
+  Future<ApiResponseDTO> resetPassword(
       email, String password, String confirmPassword) async {
     // SINALIZA PARA A TELA MOSTRAR O CARREGAMENTO
     isLoadingInput.add(true);
@@ -58,7 +58,7 @@ class ResetPasswordBloc extends ChangeNotifier {
       "confirm_password": confirmPassword
     };
 
-    AlertBoxDTO alertBoxDTO = new AlertBoxDTO();
+    ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
 
     Response response;
 
@@ -71,25 +71,25 @@ class ResetPasswordBloc extends ChangeNotifier {
 
       switch (response.statusCode) {
         case 200:
-          alertBoxDTO.title = 'Sucesso';
-          alertBoxDTO.message = 'Senha atualizada com sucesso';
+          apiResponseDTO.title = 'Sucesso';
+          apiResponseDTO.message = 'Senha atualizada com sucesso';
           break;
         case 400:
-          alertBoxDTO.message = jsonDecode(response.body)['error'];
+          apiResponseDTO.message = jsonDecode(response.body)['error'];
           break;
       }
     } on SocketException {
-      alertBoxDTO.message = 'O dispositivo está sem internet';
+      apiResponseDTO.message = 'O dispositivo está sem internet';
     } on TimeoutException {
-      alertBoxDTO.message = 'O tempo de conexão foi excedido';
+      apiResponseDTO.message = 'O tempo de conexão foi excedido';
     } on HttpException {
-      alertBoxDTO.message = 'Erro no servidor';
+      apiResponseDTO.message = 'Erro no servidor';
     }
 
     // SINALIZA PARA A TELA ESCONDER O CARREGAMENTO
     isLoadingInput.add(false);
 
-    return alertBoxDTO;
+    return apiResponseDTO;
   }
 
   @override

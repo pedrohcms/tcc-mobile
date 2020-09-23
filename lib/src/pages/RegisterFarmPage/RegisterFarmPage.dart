@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/src/DTOs/AlertBoxDTO.dart';
+import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/components/AlertBoxComponent.dart';
 import 'package:mobile/src/pages/RegisterFarmPage/RegisterFarmBloc.dart';
 
@@ -165,7 +165,8 @@ class _RegisterFarmPageState extends State<RegisterFarmPage> {
                         ),
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
-                            AlertBoxDTO result = await _registerFarmBloc.store(
+                            ApiResponseDTO result =
+                                await _registerFarmBloc.store(
                               _nameFieldController.text,
                               _addressFieldController.text,
                             );

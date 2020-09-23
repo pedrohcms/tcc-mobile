@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:mobile/src/DTOs/AlertBoxDTO.dart';
+import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/models/Farm.dart';
 import 'package:mobile/src/services/ApiService.dart';
 import 'package:http/http.dart';
@@ -19,7 +19,7 @@ class FarmListBloc extends ChangeNotifier {
   Future<void> index() async {
     ApiService apiService = new ApiService();
 
-    AlertBoxDTO alertBoxDTO = new AlertBoxDTO();
+    ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
 
     try {
       Response response = await apiService.makeRequest(
@@ -42,26 +42,26 @@ class FarmListBloc extends ChangeNotifier {
           farmListInput.add(farms);
           break;
         case 400:
-          alertBoxDTO.message =
+          apiResponseDTO.message =
               'Sua sessão expirou por favor faça o login novamente';
-          _farmListController.addError(alertBoxDTO);
+          _farmListController.addError(apiResponseDTO);
           break;
         case 401:
-          alertBoxDTO.message = jsonDecode(response.body)['error'];
-          alertBoxDTO.sendToLogin = true;
-          _farmListController.addError(alertBoxDTO);
+          apiResponseDTO.message = jsonDecode(response.body)['error'];
+          apiResponseDTO.sendToLogin = true;
+          _farmListController.addError(apiResponseDTO);
           break;
         default:
       }
     } on SocketException {
-      alertBoxDTO.message = 'O dispositivo está sem internet';
-      _farmListController.addError(alertBoxDTO);
+      apiResponseDTO.message = 'O dispositivo está sem internet';
+      _farmListController.addError(apiResponseDTO);
     } on TimeoutException {
-      alertBoxDTO.message = 'O tempo de conexão foi excedido';
-      _farmListController.addError(alertBoxDTO);
+      apiResponseDTO.message = 'O tempo de conexão foi excedido';
+      _farmListController.addError(apiResponseDTO);
     } on HttpException {
-      alertBoxDTO.message = 'Erro no servidor';
-      _farmListController.addError(alertBoxDTO);
+      apiResponseDTO.message = 'Erro no servidor';
+      _farmListController.addError(apiResponseDTO);
     }
 
     notifyListeners();

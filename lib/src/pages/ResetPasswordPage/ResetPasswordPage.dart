@@ -1,6 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/src/DTOs/AlertBoxDTO.dart';
+import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/components/AlertBoxComponent.dart';
 import 'package:mobile/src/pages/ResetPasswordPage/ResetPasswordBloc.dart';
 
@@ -217,11 +217,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       ),
                       onPressed: () async {
                         if (_formkey.currentState.validate()) {
-                          AlertBoxDTO result =
+                          ApiResponseDTO result =
                               await _resetPasswordBloc.resetPassword(
-                                  _emailFieldController.text,
-                                  _passwordFieldController.text,
-                                  _passwordConfirmationFieldController.text);
+                            _emailFieldController.text,
+                            _passwordFieldController.text,
+                            _passwordConfirmationFieldController.text,
+                          );
 
                           showDialog(
                             context: context,

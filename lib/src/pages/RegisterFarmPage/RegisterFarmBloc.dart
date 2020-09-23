@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
-import 'package:mobile/src/DTOs/AlertBoxDTO.dart';
+import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/services/ApiService.dart';
 
 class RegisterFarmBloc extends ChangeNotifier {
@@ -12,7 +12,7 @@ class RegisterFarmBloc extends ChangeNotifier {
   Sink<bool> get isLoadingInput => _isLoadingController.sink;
   Stream<bool> get isLoadingOutput => _isLoadingController.stream;
 
-  Future<AlertBoxDTO> store(String name, String address) async {
+  Future<ApiResponseDTO> store(String name, String address) async {
     // SINALIZA PARA A TELA MOSTRAR O CARREGAMENTO
     _isLoadingController.add(true);
 
@@ -20,7 +20,7 @@ class RegisterFarmBloc extends ChangeNotifier {
 
     Map<String, dynamic> body = {"name": name, "address": address};
 
-    AlertBoxDTO alertBoxDTO = new AlertBoxDTO();
+    ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
 
     Response response;
 
@@ -34,33 +34,33 @@ class RegisterFarmBloc extends ChangeNotifier {
 
       switch (response.statusCode) {
         case 201:
-          alertBoxDTO.title = 'Sucesso';
-          alertBoxDTO.message = 'Fazenda cadastrada com sucesso';
+          apiResponseDTO.title = 'Sucesso';
+          apiResponseDTO.message = 'Fazenda cadastrada com sucesso';
           break;
         case 400:
-          alertBoxDTO.message = jsonDecode(response.body)['error'];
+          apiResponseDTO.message = jsonDecode(response.body)['error'];
           break;
         case 401:
-          alertBoxDTO.message =
+          apiResponseDTO.message =
               'Sua sessão expirou por favor faça o login novamente';
-          alertBoxDTO.sendToLogin = true;
+          apiResponseDTO.sendToLogin = true;
           break;
         case 403:
-          alertBoxDTO.message = 'O usuário não tem permissão para isso';
+          apiResponseDTO.message = 'O usuário não tem permissão para isso';
           break;
       }
     } on SocketException {
-      alertBoxDTO.message = 'O dispositivo está sem internet';
+      apiResponseDTO.message = 'O dispositivo está sem internet';
     } on TimeoutException {
-      alertBoxDTO.message = 'O tempo de conexão foi excedido';
+      apiResponseDTO.message = 'O tempo de conexão foi excedido';
     } on HttpException {
-      alertBoxDTO.message = 'Erro no servidor';
+      apiResponseDTO.message = 'Erro no servidor';
     }
 
     // SINALIZA PARA A TELA ESCONDER O CARREGAMENTO
     isLoadingInput.add(false);
 
-    return alertBoxDTO;
+    return apiResponseDTO;
   }
 
   @override

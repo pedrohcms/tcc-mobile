@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/src/DTOs/AlertBoxDTO.dart';
+import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 
 class AlertBoxComponent extends StatelessWidget {
-  final AlertBoxDTO data;
+  final ApiResponseDTO data;
 
   AlertBoxComponent({this.data});
 
