@@ -5,7 +5,7 @@ import 'package:mobile/src/services/TokenService.dart';
 
 class ApiService {
   final Client _client = new Client();
-  final String _baseUrl = 'http://192.168.0.10:3333/v1';
+  final String _baseUrl = 'http://10.0.0.167:3333/v1';
   final int _timeOut = 20;
 
   /// Responsible for making the request to the API

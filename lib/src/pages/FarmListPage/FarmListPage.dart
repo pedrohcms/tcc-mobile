@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/src/models/Farm.dart';
 import 'package:mobile/src/pages/FarmListPage/FarmListBloc.dart';
 
 class FarmListPage extends StatefulWidget {
@@ -8,10 +10,17 @@ class FarmListPage extends StatefulWidget {
 
 class _FarmListPageState extends State<FarmListPage> {
   final FarmListBloc _farmListBloc = new FarmListBloc();
+
   @override
   void initState() {
     super.initState();
     _farmListBloc.index();
+  }
+
+  @override
+  void dispose() {
+    _farmListBloc.dispose();
+    super.dispose();
   }
 
   @override
@@ -94,87 +103,54 @@ class _FarmListPageState extends State<FarmListPage> {
         ),
       ),
       body: Container(
-          child: ListView(
-        children: <Widget>[
-          Container(
-            color: Colors.grey[200],
-            child: ListTile(
-              title: Text(
-                "Fazenda Campo Verde",
-                style: TextStyle(fontSize: 20),
-              ),
-              subtitle: Text(
-                "Endereço 01",
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Container(
-            color: Colors.grey[200],
-            child: ListTile(
-              title: Text(
-                "Fazenda 2 Irmãos",
-                style: TextStyle(fontSize: 20),
-              ),
-              subtitle: Text(
-                "Endereço 02",
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Container(
-            color: Colors.grey[200],
-            child: ListTile(
-              title: Text(
-                "Fazenda Cana de Açúcar",
-                style: TextStyle(fontSize: 20),
-              ),
-              subtitle: Text(
-                "Endereço 03",
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Container(
-            color: Colors.grey[200],
-            child: ListTile(
-              title: Text(
-                "Fazenda Leiteira",
-                style: TextStyle(fontSize: 20),
-              ),
-              subtitle: Text(
-                "Endereço 04",
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Container(
-            color: Colors.grey[200],
-            child: ListTile(
-              title: Text(
-                "Fazenda Paulista",
-                style: TextStyle(fontSize: 20),
-              ),
-              subtitle: Text(
-                "Endereço 05",
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-          ),
-        ],
-      )),
+        child: StreamBuilder<List<Farm>>(
+          stream: _farmListBloc.farmListOutput,
+          builder: (context, snapshot) {
+            // CASO NÃO TENHA INFORMAÇÕES MOSTRAMOS CARREGAMENTO
+            if (!snapshot.hasData) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Carregando",
+                      style: TextStyle(fontSize: 25.0),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    CircularProgressIndicator(),
+                  ],
+                ),
+              );
+            }
+
+            return ListView.separated(
+              itemBuilder: (context, index) {
+                return Container(
+                  color: Colors.grey[200],
+                  child: ListTile(
+                    title: Text(
+                      "${snapshot.data[index].name}",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    subtitle: Text(
+                      "${snapshot.data[index].address}",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) {
+                return SizedBox(
+                  height: 5,
+                );
+              },
+              itemCount: snapshot.data.length,
+            );
+          },
+        ),
+      ),
     );
   }
 }
