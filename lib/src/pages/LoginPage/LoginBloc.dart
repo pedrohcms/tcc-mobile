@@ -23,11 +23,10 @@ class LoginBloc extends ChangeNotifier {
   Sink<bool> get isLoadingInput => _isLoadingController.sink;
   Stream<bool> get isLoadingOutput => _isLoadingController.stream;
 
+  /// MÉTODO RESPONSÁVEL POR FAZER A REQUSIÇÃO DE LOGIN
   Future<ApiResponseDTO> login(String email, String password) async {
     // SINALIZA PARA A TELA MOSTRAR O CARREGAMENTO
     isLoadingInput.add(true);
-
-    ApiService apiService = new ApiService();
 
     Map<String, dynamic> body = {
       "email": email,
@@ -39,19 +38,25 @@ class LoginBloc extends ChangeNotifier {
     Response response;
 
     try {
-      response = await apiService.makeRequest(
-          method: "POST", uri: "sessions", body: jsonEncode(body));
+      response = await ApiService.makeRequest(
+        method: "POST",
+        uri: "sessions",
+        body: jsonEncode(body),
+      );
 
       Map<String, dynamic> responseBody = jsonDecode(response.body);
 
-      if (response.statusCode == 400) {
-        apiResponseDTO.message = responseBody['error'];
-      } else {
-        TokenService tokenService = new TokenService();
+      apiResponseDTO.statusCode = response.statusCode;
 
-        tokenService.setToken(responseBody["token"]);
+      switch (response.statusCode) {
+        case 200:
+          TokenService.setToken(responseBody["token"]);
+          apiResponseDTO.title = "Sucesso";
+          break;
 
-        apiResponseDTO.title = "Sucesso";
+        case 400:
+          apiResponseDTO.message = responseBody['error'];
+          break;
       }
     } on SocketException {
       apiResponseDTO.message = 'O dispositivo está sem internet';

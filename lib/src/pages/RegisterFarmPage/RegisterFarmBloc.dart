@@ -12,25 +12,26 @@ class RegisterFarmBloc extends ChangeNotifier {
   Sink<bool> get isLoadingInput => _isLoadingController.sink;
   Stream<bool> get isLoadingOutput => _isLoadingController.stream;
 
+  /// MÉTODO RESPONSÁVEL POR FAZER A REQUSIÇÃO PARA CADASTRO DE FAZENDA
   Future<ApiResponseDTO> store(String name, String address) async {
     // SINALIZA PARA A TELA MOSTRAR O CARREGAMENTO
     _isLoadingController.add(true);
 
-    ApiService apiService = new ApiService();
-
     Map<String, dynamic> body = {"name": name, "address": address};
-
-    ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
 
     Response response;
 
+    ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
+
     try {
-      response = await apiService.makeRequest(
+      response = await ApiService.makeRequest(
         method: "POST",
         body: jsonEncode(body),
         uri: "/farms",
         sendToken: true,
       );
+
+      apiResponseDTO.statusCode = response.statusCode;
 
       switch (response.statusCode) {
         case 201:

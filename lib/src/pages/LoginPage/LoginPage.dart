@@ -200,16 +200,17 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
                             ApiResponseDTO result = await _loginBloc.login(
-                                _emailFieldController.text,
-                                _passwordFieldController.text);
+                              _emailFieldController.text,
+                              _passwordFieldController.text,
+                            );
 
-                            if (result.title == 'Erro') {
+                            if (result.statusCode != 200) {
                               showDialog(
                                 context: context,
                                 builder: (_) => AlertBoxComponent(data: result),
                               );
                             } else {
-                              Navigator.pushNamed(context, '/farm_list');
+                              Navigator.popAndPushNamed(context, '/farm_list');
                             }
                           }
                         },

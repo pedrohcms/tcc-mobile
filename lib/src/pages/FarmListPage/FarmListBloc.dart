@@ -17,16 +17,16 @@ class FarmListBloc extends ChangeNotifier {
 
   /// Método responsável por buscar as fazendas na API
   Future<void> index() async {
-    ApiService apiService = new ApiService();
-
     ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
 
     try {
-      Response response = await apiService.makeRequest(
+      Response response = await ApiService.makeRequest(
         method: "GET",
         uri: "/farms",
         sendToken: true,
       );
+
+      apiResponseDTO.statusCode = response.statusCode;
 
       switch (response.statusCode) {
         case 200:
@@ -42,13 +42,15 @@ class FarmListBloc extends ChangeNotifier {
           farmListInput.add(farms);
           break;
         case 400:
-          apiResponseDTO.message =
-              'Sua sessão expirou por favor faça o login novamente';
+          apiResponseDTO.message = jsonDecode(response.body)['error'];
+
           _farmListController.addError(apiResponseDTO);
           break;
         case 401:
-          apiResponseDTO.message = jsonDecode(response.body)['error'];
+          apiResponseDTO.message =
+              'Sua sessão expirou por favor faça o login novamente';
           apiResponseDTO.sendToLogin = true;
+
           _farmListController.addError(apiResponseDTO);
           break;
         default:

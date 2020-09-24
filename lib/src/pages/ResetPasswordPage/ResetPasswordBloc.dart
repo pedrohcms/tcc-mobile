@@ -46,12 +46,11 @@ class ResetPasswordBloc extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// MÉTODO RESPONSÁVEL POR FAZER A REQUISIÇÃO DE TROCA DE SENHA
   Future<ApiResponseDTO> resetPassword(
       email, String password, String confirmPassword) async {
     // SINALIZA PARA A TELA MOSTRAR O CARREGAMENTO
     isLoadingInput.add(true);
-
-    ApiService apiService = new ApiService();
 
     Map<String, dynamic> body = {
       "password": password,
@@ -63,11 +62,13 @@ class ResetPasswordBloc extends ChangeNotifier {
     Response response;
 
     try {
-      response = await apiService.makeRequest(
+      response = await ApiService.makeRequest(
         method: "POST",
         uri: "reset_passwords/$email",
         body: jsonEncode(body),
       );
+
+      apiResponseDTO.statusCode = response.statusCode;
 
       switch (response.statusCode) {
         case 200:

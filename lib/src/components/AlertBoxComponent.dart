@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
+import 'package:mobile/src/services/TokenService.dart';
 
 class AlertBoxComponent extends StatelessWidget {
   final ApiResponseDTO data;
@@ -19,9 +20,12 @@ class AlertBoxComponent extends StatelessWidget {
               return FlatButton(
                 child: Text('OK'),
                 onPressed: () {
-                  Navigator.popUntil(
+                  TokenService.deleteToken();
+
+                  Navigator.pushNamedAndRemoveUntil(
                     context,
-                    ModalRoute.withName('/'),
+                    '/',
+                    (Route<dynamic> route) => false,
                   );
                 },
               );

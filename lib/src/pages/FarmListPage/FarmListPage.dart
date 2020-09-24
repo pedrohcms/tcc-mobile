@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/models/Farm.dart';
 import 'package:mobile/src/pages/FarmListPage/FarmListBloc.dart';
+import 'package:mobile/src/services/TokenService.dart';
 
 class FarmListPage extends StatefulWidget {
   @override
@@ -47,11 +49,18 @@ class _FarmListPageState extends State<FarmListPage> {
                       Text(
                         "Adicionar Fazenda",
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      "/register_farm",
+                    );
+                  },
                 ),
               ),
               Expanded(
@@ -60,11 +69,16 @@ class _FarmListPageState extends State<FarmListPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.add, color: Colors.white),
+                      Icon(
+                        Icons.person_add,
+                        color: Colors.white,
+                      ),
                       Text(
                         "Adicionar Usuário",
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
@@ -77,7 +91,10 @@ class _FarmListPageState extends State<FarmListPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.exit_to_app, color: Colors.white),
+                      Icon(
+                        Icons.exit_to_app,
+                        color: Colors.white,
+                      ),
                       Text(
                         "Logout",
                         textAlign: TextAlign.center,
@@ -85,7 +102,11 @@ class _FarmListPageState extends State<FarmListPage> {
                       ),
                     ],
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    TokenService.deleteToken();
+
+                    Navigator.popAndPushNamed(context, '/');
+                  },
                 ),
               ),
             ],
@@ -120,6 +141,63 @@ class _FarmListPageState extends State<FarmListPage> {
                       height: 20.0,
                     ),
                     CircularProgressIndicator(),
+                  ],
+                ),
+              );
+            }
+
+            if (snapshot.hasError) {
+              ApiResponseDTO apiResponseDTO = ApiResponseDTO.fromJson(
+                snapshot.error,
+              );
+
+              // NESSE CASO VAMOS MANDAR O USUÁRIO PARA O LOGIN
+              if (apiResponseDTO.sendToLogin) {
+                return Center(
+                  child: Column(
+                    children: [
+                      Text("${apiResponseDTO.message}"),
+                      FlatButton(
+                        child: Text('OK'),
+                        onPressed: () {
+                          Navigator.popUntil(
+                            context,
+                            ModalRoute.withName('/'),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return Center(
+                  child: Column(
+                    children: [
+                      Text("${apiResponseDTO.message}"),
+                      FlatButton(
+                        child: Text('Tentar novamente'),
+                        onPressed: () {
+                          _farmListBloc.index();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              }
+            }
+
+            // CASO NÃO VENHA FAZENDAS NA RESPOSTA
+            if (snapshot.data.length == 0) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Você não está vinculado a nenhuma fazenda",
+                      overflow: TextOverflow.visible,
+                      style: TextStyle(fontSize: 20.0),
+                      textAlign: TextAlign.center,
+                    ),
                   ],
                 ),
               );

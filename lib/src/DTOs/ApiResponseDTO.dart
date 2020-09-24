@@ -11,7 +11,12 @@ class ApiResponseDTO {
   /// SE DEVO RETORNAR O USUÁRIO PARA A TELA DE LOGIN
   bool sendToLogin;
 
-  ApiResponseDTO({this.title, this.message, this.statusCode, this.sendToLogin});
+  ApiResponseDTO({
+    this.title = 'Erro',
+    this.message = '',
+    this.statusCode = 0,
+    this.sendToLogin = false,
+  });
 
   ApiResponseDTO.fromJson(dynamic json) {
     title = json['title'];

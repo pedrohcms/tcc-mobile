@@ -4,9 +4,8 @@ import 'package:http/http.dart';
 import 'package:mobile/src/services/TokenService.dart';
 
 class ApiService {
-  final Client _client = new Client();
-  final String _baseUrl = 'http://10.0.0.167:3333/v1';
-  final int _timeOut = 20;
+  static final String _baseUrl = 'http://10.0.0.167:3333/v1';
+  static final int _timeOut = 20;
 
   /// Responsible for making the request to the API
   ///
@@ -19,18 +18,19 @@ class ApiService {
   /// [FormatException] in case the method param is diferent then GET, POST, UPDATE or DELETE;
   ///
   /// [HttpException] in case the server responds with 500/Internal Server Error status;
-  Future<Response> makeRequest(
-      {String method,
-      String uri,
-      String body,
-      Map<String, dynamic> headers,
-      Map<String, dynamic> queries,
-      bool sendToken = false}) async {
+  static Future<Response> makeRequest({
+    String method,
+    String uri,
+    String body,
+    Map<String, dynamic> headers,
+    Map<String, dynamic> queries,
+    bool sendToken = false,
+  }) async {
     // Checking for internet connection
     await InternetAddress.lookup('google.com');
 
     // Setting up the URL
-    String url = '$_baseUrl/$uri' + makeQuery(queries);
+    String url = '$_baseUrl/$uri' + ApiService.makeQuery(queries);
 
     // Setting request type
     if (headers == null) {
@@ -41,9 +41,7 @@ class ApiService {
     headers['Accept-Language'] = 'pt-BR';
 
     if (sendToken) {
-      TokenService tokenService = new TokenService();
-
-      String token = await tokenService.getToken() ?? "";
+      String token = await TokenService.getToken() ?? "";
 
       headers['Authorization'] = "Bearer $token";
     }
@@ -53,7 +51,7 @@ class ApiService {
     // Sending the request
     switch (method) {
       case 'GET':
-        response = await _client.get(url, headers: headers).timeout(
+        response = await get(url, headers: headers).timeout(
           Duration(seconds: _timeOut),
           onTimeout: () {
             throw TimeoutException('Connection timed out');
@@ -62,8 +60,7 @@ class ApiService {
         break;
 
       case 'POST':
-        response =
-            await _client.post(url, body: body, headers: headers).timeout(
+        response = await post(url, body: body, headers: headers).timeout(
           Duration(seconds: _timeOut),
           onTimeout: () {
             throw TimeoutException('Connection timed out');
@@ -72,7 +69,7 @@ class ApiService {
         break;
 
       case 'UPDATE':
-        response = await _client.put(url, body: body, headers: headers).timeout(
+        response = await put(url, body: body, headers: headers).timeout(
           Duration(seconds: _timeOut),
           onTimeout: () {
             throw TimeoutException('Connection timed out');
@@ -81,14 +78,14 @@ class ApiService {
         break;
 
       case 'DELETE':
-        response = await _client.delete(url, headers: headers).timeout(
+        response = await delete(url, headers: headers).timeout(
           Duration(seconds: _timeOut),
           onTimeout: () {
-            closeClient();
             throw TimeoutException('Connection timed out');
           },
         );
         break;
+
       default:
         throw new FormatException('Method not found');
         break;
@@ -101,7 +98,7 @@ class ApiService {
     return response;
   }
 
-  String makeQuery(Map<String, dynamic> queries) {
+  static String makeQuery(Map<String, dynamic> queries) {
     if (queries == null) {
       return '';
     }
@@ -113,9 +110,5 @@ class ApiService {
     });
 
     return query;
-  }
-
-  void closeClient() {
-    _client.close();
   }
 }
