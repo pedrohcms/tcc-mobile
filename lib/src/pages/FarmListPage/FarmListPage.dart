@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/models/Farm.dart';
 import 'package:mobile/src/pages/FarmListPage/FarmListBloc.dart';
+import 'package:mobile/src/providers/FarmProvider.dart';
 import 'package:mobile/src/services/TokenService.dart';
+import 'package:provider/provider.dart';
 
 class FarmListPage extends StatefulWidget {
   @override
@@ -160,10 +162,9 @@ class _FarmListPageState extends State<FarmListPage> {
                       FlatButton(
                         child: Text('OK'),
                         onPressed: () {
-                          Navigator.popUntil(
-                            context,
-                            ModalRoute.withName('/'),
-                          );
+                          TokenService.deleteToken();
+
+                          Navigator.popAndPushNamed(context, '/');
                         },
                       ),
                     ],
@@ -172,6 +173,7 @@ class _FarmListPageState extends State<FarmListPage> {
               } else {
                 return Center(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text("${apiResponseDTO.message}"),
                       FlatButton(
@@ -209,6 +211,12 @@ class _FarmListPageState extends State<FarmListPage> {
                 return Container(
                   color: Colors.grey[200],
                   child: ListTile(
+                    onTap: () {
+                      // MONTAMOS A INSTÂNCIA DO FARM NO PROVIDER
+                      context.read<FarmProvider>().farm = snapshot.data[index];
+
+                      Navigator.pushNamed(context, '/home');
+                    },
                     title: Text(
                       "${snapshot.data[index].name}",
                       style: TextStyle(fontSize: 20),
