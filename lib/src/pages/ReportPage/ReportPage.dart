@@ -1,11 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
+class ReportPage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _ReportPageState createState() => _ReportPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ReportPageState extends State<ReportPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -18,7 +19,7 @@ class _HomePageState extends State<HomePage> {
             flexibleSpace: FlexibleSpaceBar(
               //title: Text("Bem vindo a sua propriedade"),
               background:
-                  Image.asset('images/home.png', height: 210, width: 210),
+                  Image.asset('images/relatorio.png', height: 210, width: 210),
             ),
           ),
           SliverAppBar(
@@ -27,7 +28,7 @@ class _HomePageState extends State<HomePage> {
             expandedHeight: 50.0,
             backgroundColor: Colors.blue,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text("Bem vindo a sua Propriedade"),
+              title: Text("Relatórios"),
             ),
           ),
           SliverFixedExtentList(
@@ -117,6 +118,33 @@ class _HomePageState extends State<HomePage> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              Expanded(
+                flex: 1,
+                child: FlatButton(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.account_circle,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        "Minha Conta",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      "/register_farm",
+                    );
+                  },
+                ),
+              ),
               Expanded(
                 flex: 1,
                 child: FlatButton(
