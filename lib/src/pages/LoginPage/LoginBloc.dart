@@ -50,8 +50,9 @@ class LoginBloc extends ChangeNotifier {
 
       switch (response.statusCode) {
         case 200:
-          TokenService.setToken(responseBody["token"]);
+          TokenService.setToken(responseBody["user"]["token"]);
           apiResponseDTO.title = "Sucesso";
+          apiResponseDTO.data = responseBody["user"];
           break;
 
         case 400:

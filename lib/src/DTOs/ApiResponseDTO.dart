@@ -11,11 +11,14 @@ class ApiResponseDTO {
   /// SE DEVO RETORNAR O USUÁRIO PARA A TELA DE LOGIN
   bool sendToLogin;
 
+  Map<String, dynamic> data;
+
   ApiResponseDTO({
     this.title = 'Erro',
     this.message = '',
     this.statusCode = 0,
     this.sendToLogin = false,
+    this.data,
   });
 
   ApiResponseDTO.fromJson(dynamic json) {
@@ -23,6 +26,7 @@ class ApiResponseDTO {
     message = json['message'];
     statusCode = json['statusCode'];
     sendToLogin = json['sendToLogin'];
+    data = json['data'];
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +35,7 @@ class ApiResponseDTO {
     data['message'] = this.message;
     data['statusCode'] = this.statusCode;
     data['sendToLogin'] = this.sendToLogin;
+    data['data'] = this.data;
     return data;
   }
 }

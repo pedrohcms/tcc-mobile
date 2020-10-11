@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:mobile/src/models/User.dart';
+import 'package:provider/provider.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/components/AlertBoxComponent.dart';
 import 'package:mobile/src/pages/LoginPage/LoginBloc.dart';
+import 'package:mobile/src/providers/UserProvider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -210,6 +213,9 @@ class _LoginPageState extends State<LoginPage> {
                                 builder: (_) => AlertBoxComponent(data: result),
                               );
                             } else {
+                              context.read<UserProvider>().user =
+                                  User.fromJson(result.data);
+
                               Navigator.popAndPushNamed(context, '/farm_list');
                             }
                           }

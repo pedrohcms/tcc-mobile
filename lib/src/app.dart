@@ -6,6 +6,7 @@ import 'package:mobile/src/pages/RegisterFarmPage/RegisterFarmPage.dart';
 import 'package:mobile/src/pages/LoginPage/LoginPage.dart';
 import 'package:mobile/src/pages/ResetPasswordPage/ResetPasswordPage.dart';
 import 'package:mobile/src/providers/FarmProvider.dart';
+import 'package:mobile/src/providers/UserProvider.dart';
 import 'package:provider/provider.dart';
 
 class App extends StatelessWidget {
@@ -15,7 +16,10 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<FarmProvider>(
           create: (_) => FarmProvider(),
-        )
+        ),
+        ChangeNotifierProvider<UserProvider>(
+          create: (_) => UserProvider(),
+        ),
       ],
       child: MaterialApp(
         title: 'Sistema de Irrigação Simplificado',
