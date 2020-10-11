@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/src/components/WaterAmountComponent.dart';
+import 'package:mobile/src/models/Home.dart';
+import 'package:mobile/src/models/Measure.dart';
+import 'package:mobile/src/pages/HomePage/HomeBloc.dart';
+import 'package:mobile/src/providers/FarmProvider.dart';
 import 'package:mobile/src/services/TokenService.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -8,8 +13,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  HomeBloc _homeBloc = new HomeBloc();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _homeBloc.dispose();
+    super.dispose();
+  }
+
+  int getFarmId(BuildContext context) {
+    FarmProvider farmProvider = context.watch<FarmProvider>();
+    return farmProvider.farm.id;
+  }
+
   @override
   Widget build(BuildContext context) {
+    _homeBloc.getHomeDate(getFarmId(context));
+
     return new Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -36,29 +61,44 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          SliverFixedExtentList(
-            itemExtent: 150.0,
-            delegate: SliverChildListDelegate(
-              [
-                WaterAmountComponent(
-                  text: "QUANTIDADE DE ÁGUA USADA HOJE",
-                  amount: 90000.25,
-                  color: Colors.blue[200],
-                ),
-                WaterAmountComponent(
-                  text: "QUANTIDADE DE ÁGUA USADA NAS ÚLTIMAS 12 HORAS",
-                  amount: 100000,
-                  color: Colors.blue,
-                ),
-                WaterAmountComponent(
-                  text: "QUANTIDADE DE ÁGUA USADA NAS UĹTIMAS 24 HORAS",
-                  amount: 250000,
-                  color: Colors.blue[700],
-                ),
-                Container(color: Colors.white),
-              ],
-            ),
-          ),
+          StreamBuilder<Home>(
+              stream: _homeBloc.homeOutput,
+              initialData: new Home(
+                todayMeasures: new Measure(),
+                lastTwelveHoursMeasures: new Measure(),
+                yesterdayMeasures: new Measure(),
+              ),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return CircularProgressIndicator();
+                }
+
+                return SliverFixedExtentList(
+                  itemExtent: 150.0,
+                  delegate: SliverChildListDelegate(
+                    [
+                      WaterAmountComponent(
+                        text: "QUANTIDADE DE ÁGUA USADA HOJE",
+                        amount: snapshot.data.todayMeasures.sum,
+                        color: Colors.blue[200],
+                      ),
+                      WaterAmountComponent(
+                        text: "QUANTIDADE DE ÁGUA USADA NAS ÚLTIMAS 12 HORAS",
+                        amount: snapshot.data.lastTwelveHoursMeasures.sum,
+                        color: Colors.blue,
+                      ),
+                      WaterAmountComponent(
+                        text: "QUANTIDADE DE ÁGUA USADA NAS UĹTIMAS 24 HORAS",
+                        amount: snapshot.data.yesterdayMeasures.sum,
+                        color: Colors.blue[700],
+                      ),
+                      Container(
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                );
+              }),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
