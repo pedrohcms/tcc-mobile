@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/components/WaterAmountComponent.dart';
 import 'package:mobile/src/models/Farm.dart';
 import 'package:mobile/src/models/Home.dart';
@@ -73,28 +74,100 @@ class _HomePageState extends State<HomePage> {
           StreamBuilder<Home>(
             stream: _homeBloc.homeOutput,
             builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                ApiResponseDTO apiResponseDTO = ApiResponseDTO.fromJson(
+                  snapshot.error,
+                );
+
+                // NESSE CASO VAMOS MANDAR O USUÁRIO PARA O LOGIN
+                if (apiResponseDTO.sendToLogin) {
+                  return SliverFillRemaining(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${apiResponseDTO.message}",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          SizedBox(
+                            height: 40,
+                          ),
+                          FlatButton(
+                            color: Colors.blue,
+                            child: Text(
+                              'OK',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                              ),
+                            ),
+                            onPressed: () {
+                              TokenService.deleteToken();
+
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                '/',
+                                (Route<dynamic> route) => false,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                } else {
+                  return SliverFillRemaining(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${apiResponseDTO.message}",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          SizedBox(
+                            height: 40.0,
+                          ),
+                          FlatButton(
+                            color: Colors.blue,
+                            child: Text(
+                              'Tentar novamente',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                              ),
+                            ),
+                            onPressed: () {
+                              _homeBloc.getHomeDate(this.farm.id);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              }
+
               if (!snapshot.hasData) {
-                return SliverFixedExtentList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Carregando",
-                              style: TextStyle(fontSize: 25.0),
-                            ),
-                            SizedBox(
-                              height: 20.0,
-                            ),
-                            CircularProgressIndicator(),
-                          ],
+                return SliverFillRemaining(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Carregando",
+                          style: TextStyle(fontSize: 25.0),
                         ),
-                      )
-                    ],
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        CircularProgressIndicator(),
+                      ],
+                    ),
                   ),
-                  itemExtent: 150.0,
                 );
               }
 
@@ -196,7 +269,11 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     TokenService.deleteToken();
 
-                    Navigator.popAndPushNamed(context, '/');
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/',
+                      (Route<dynamic> route) => false,
+                    );
                   },
                 ),
               ),

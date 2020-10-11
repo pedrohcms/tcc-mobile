@@ -40,7 +40,7 @@ class LoginBloc extends ChangeNotifier {
     try {
       response = await ApiService.makeRequest(
         method: "POST",
-        uri: "sessions",
+        uri: "/sessions",
         body: jsonEncode(body),
       );
 

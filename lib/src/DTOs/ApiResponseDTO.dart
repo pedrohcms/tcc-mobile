@@ -21,12 +21,18 @@ class ApiResponseDTO {
     this.data,
   });
 
-  ApiResponseDTO.fromJson(dynamic json) {
-    title = json['title'];
-    message = json['message'];
-    statusCode = json['statusCode'];
-    sendToLogin = json['sendToLogin'];
-    data = json['data'];
+  ApiResponseDTO.fromJson(ApiResponseDTO json) {
+    title = json.title;
+    message = json.message;
+    statusCode = json.statusCode;
+    sendToLogin = json.sendToLogin;
+    data = json.data;
+  }
+
+  ApiResponseDTO.fromObject(Object object) {
+    print('Passou no fromObject');
+    print(object);
+    print(object.toString());
   }
 
   Map<String, dynamic> toJson() {
