@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sparkline/flutter_sparkline.dart';
 
 class ReportPage extends StatefulWidget {
   @override
@@ -7,6 +8,7 @@ class ReportPage extends StatefulWidget {
 }
 
 class _ReportPageState extends State<ReportPage> {
+  var data = [0.1, 1.0, 3.4, 4.5, 4.6, 10.20];
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -17,7 +19,6 @@ class _ReportPageState extends State<ReportPage> {
             expandedHeight: 175.0,
             backgroundColor: Colors.white,
             flexibleSpace: FlexibleSpaceBar(
-              //title: Text("Bem vindo a sua propriedade"),
               background:
                   Image.asset('images/relatorio.png', height: 210, width: 210),
             ),
@@ -25,10 +26,10 @@ class _ReportPageState extends State<ReportPage> {
           SliverAppBar(
             pinned: true,
             floating: false,
-            expandedHeight: 50.0,
+            expandedHeight: 20.0,
             backgroundColor: Colors.blue,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text("Relatórios"),
+              title: Text("Medições da Fazenda"),
             ),
           ),
           SliverFixedExtentList(
@@ -46,6 +47,26 @@ class _ReportPageState extends State<ReportPage> {
                       borderRadius: BorderRadius.circular(30),
                       color: Colors.blue,
                     ),
+                    child: FlatButton(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.assignment,
+                              color: Colors.white,
+                              size: 70,
+                            ),
+                            Text(
+                              "Quantidade de Litros",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ],
+                        ),
+                        onPressed: null),
                   ),
                 ),
 
@@ -58,11 +79,30 @@ class _ReportPageState extends State<ReportPage> {
                         width: 2,
                       ),
                       borderRadius: BorderRadius.circular(30),
-                      color: Colors.blue[200],
+                      color: Colors.blue[600],
                     ),
+                    child: FlatButton(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.assessment,
+                              color: Colors.white,
+                              size: 70,
+                            ),
+                            Text(
+                              "Umidade Média",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ],
+                        ),
+                        onPressed: null),
                   ),
                 ),
-
                 //TERCEIRO CONTAINER
                 ClipRRect(
                   child: Container(
@@ -72,38 +112,40 @@ class _ReportPageState extends State<ReportPage> {
                         width: 2,
                       ),
                       borderRadius: BorderRadius.circular(30),
-                      color: Colors.blue[500],
+                      color: Colors.white10,
                     ),
+                    child: FlatButton(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Gráfico Litros/Hora: ",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ],
+                        ),
+                        onPressed: null),
                   ),
                 ),
 
                 //QUARTO CONTAINER
+
                 ClipRRect(
                   child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.circular(30),
-                      color: Colors.blue[700],
-                    ),
+                    width: 5,
+                    //GRÁFICO / CHART
+                    child: new Sparkline(
+                        data: data,
+                        lineColor: Color(0xffff6101),
+                        pointsMode: PointsMode.all,
+                        pointSize: 8.0),
                   ),
                 ),
 
-                // QUINTO CONTAINER
-                ClipRRect(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.circular(30),
-                      color: Colors.blue[900],
-                    ),
-                  ),
-                ),
                 Container(color: Colors.white),
               ],
             ),
@@ -125,38 +167,11 @@ class _ReportPageState extends State<ReportPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.account_circle,
+                        Icons.arrow_back_ios,
                         color: Colors.white,
                       ),
                       Text(
-                        "Minha Conta",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      "/register_farm",
-                    );
-                  },
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.trending_up,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "Relatórios",
+                        "Voltar",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
