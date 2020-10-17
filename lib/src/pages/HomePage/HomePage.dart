@@ -224,7 +224,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/report');
+                  },
                 ),
               ),
               Expanded(
@@ -238,7 +240,7 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.white,
                       ),
                       Text(
-                        "Adicionar Conta",
+                        "Vincular Conta",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,

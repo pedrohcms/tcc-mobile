@@ -19,8 +19,11 @@ class _ReportPageState extends State<ReportPage> {
             expandedHeight: 175.0,
             backgroundColor: Colors.white,
             flexibleSpace: FlexibleSpaceBar(
-              background:
-                  Image.asset('images/relatorio.png', height: 210, width: 210),
+              background: Image.asset(
+                'images/relatorio.png',
+                height: 210,
+                width: 210,
+              ),
             ),
           ),
           SliverAppBar(
@@ -48,25 +51,26 @@ class _ReportPageState extends State<ReportPage> {
                       color: Colors.blue,
                     ),
                     child: FlatButton(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.assignment,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.assignment,
+                            color: Colors.white,
+                            size: 70,
+                          ),
+                          Text(
+                            "Quantidade de Litros",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
                               color: Colors.white,
-                              size: 70,
+                              fontSize: 25,
                             ),
-                            Text(
-                              "Quantidade de Litros",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 25,
-                              ),
-                            ),
-                          ],
-                        ),
-                        onPressed: null),
+                          ),
+                        ],
+                      ),
+                      onPressed: null,
+                    ),
                   ),
                 ),
 
@@ -82,25 +86,26 @@ class _ReportPageState extends State<ReportPage> {
                       color: Colors.blue[600],
                     ),
                     child: FlatButton(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.assessment,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.assessment,
+                            color: Colors.white,
+                            size: 70,
+                          ),
+                          Text(
+                            "Umidade Média",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
                               color: Colors.white,
-                              size: 70,
+                              fontSize: 25,
                             ),
-                            Text(
-                              "Umidade Média",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 25,
-                              ),
-                            ),
-                          ],
-                        ),
-                        onPressed: null),
+                          ),
+                        ],
+                      ),
+                      onPressed: null,
+                    ),
                   ),
                 ),
                 //TERCEIRO CONTAINER
@@ -115,20 +120,21 @@ class _ReportPageState extends State<ReportPage> {
                       color: Colors.white10,
                     ),
                     child: FlatButton(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "Gráfico Litros/Hora: ",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 25,
-                              ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "Gráfico Litros/Hora: ",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 25,
                             ),
-                          ],
-                        ),
-                        onPressed: null),
+                          ),
+                        ],
+                      ),
+                      onPressed: null,
+                    ),
                   ),
                 ),
 
@@ -139,14 +145,17 @@ class _ReportPageState extends State<ReportPage> {
                     width: 5,
                     //GRÁFICO / CHART
                     child: new Sparkline(
-                        data: data,
-                        lineColor: Color(0xffff6101),
-                        pointsMode: PointsMode.all,
-                        pointSize: 8.0),
+                      data: data,
+                      lineColor: Color(0xffff6101),
+                      pointsMode: PointsMode.all,
+                      pointSize: 8.0,
+                    ),
                   ),
                 ),
 
-                Container(color: Colors.white),
+                Container(
+                  color: Colors.white,
+                ),
               ],
             ),
           ),
