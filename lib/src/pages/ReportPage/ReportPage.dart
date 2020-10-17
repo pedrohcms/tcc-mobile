@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sparkline/flutter_sparkline.dart';
+import 'package:mobile/src/components/LineChartComponent/LineChartComponent.dart';
 
 class ReportPage extends StatefulWidget {
   @override
@@ -8,7 +8,6 @@ class ReportPage extends StatefulWidget {
 }
 
 class _ReportPageState extends State<ReportPage> {
-  var data = [0.1, 1.0, 3.4, 4.5, 4.6, 10.20];
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -124,7 +123,7 @@ class _ReportPageState extends State<ReportPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            "Gráfico Litros/Hora: ",
+                            "Gráfico Litros/Dia: ",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.blue,
@@ -142,15 +141,9 @@ class _ReportPageState extends State<ReportPage> {
 
                 ClipRRect(
                   child: Container(
-                    width: 5,
-                    //GRÁFICO / CHART
-                    child: new Sparkline(
-                      data: data,
-                      lineColor: Color(0xffff6101),
-                      pointsMode: PointsMode.all,
-                      pointSize: 8.0,
-                    ),
-                  ),
+                      width: 5,
+                      //GRÁFICO / CHART
+                      child: LineChartComponent()),
                 ),
 
                 Container(
