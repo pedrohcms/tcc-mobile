@@ -95,7 +95,7 @@ class _ReportPageState extends State<ReportPage> {
                   ),
                 ),
                 Container(
-                  height: 300,
+                  height: 400,
                   child: Padding(
                     padding: const EdgeInsets.only(
                       left: 8.0,
@@ -104,7 +104,7 @@ class _ReportPageState extends State<ReportPage> {
                     ),
                     child: LineChartComponent(),
                   ),
-                ),
+                )
               ],
             ),
           ),

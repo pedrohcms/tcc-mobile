@@ -11,6 +11,16 @@ class LineChartComponent extends StatelessWidget {
       _lineChartBloc.makeGraphicSeries(),
       animationDuration: Duration(seconds: 3),
       animate: true,
+      dateTimeFactory: LocalDateTimeFactory(),
+      domainAxis: DateTimeAxisSpec(
+        tickFormatterSpec: AutoDateTimeTickFormatterSpec(
+          day: TimeFormatterSpec(format: 'd', transitionFormat: 'dd/MM/yyyy'),
+        ),
+      ),
+      defaultRenderer: LineRendererConfig(includePoints: true),
+      behaviors: [
+        SeriesLegend(),
+      ],
     );
   }
 }
