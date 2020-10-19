@@ -25,4 +25,11 @@ class LineChartBloc {
       )
     ];
   }
+
+  /// MÉTODO RESPONSÁVEL POR RETORNAR O FORMATO DA DATA DO GRÁFICO
+  String getGraphicDateFormat(DateTime startDate, DateTime endDate) {
+    if ((endDate.year - startDate.year) > 0) return "dd/MM/yyyy";
+    if ((endDate.month - startDate.month) > 0) return "dd/MM";
+    return "dd";
+  }
 }
