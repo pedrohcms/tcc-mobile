@@ -33,15 +33,12 @@ class LineChartBloc {
         (endDate.month - startDate.month == 0) &&
         (endDate.year - startDate.year == 0)) return DateFormat('dd', 'pt_BR');
 
-    print("passou 1");
     if ((endDate.month - startDate.month > 0) &&
         (endDate.year - startDate.year == 0))
       return DateFormat('dd/MM', 'pt_BR');
 
-    print("passou 2");
     if (endDate.year - startDate.year > 0) return DateFormat.yMd('pt_BR');
 
-    print("passou 3");
     return DateFormat('dd', 'pt_BR').add_Hm();
   }
 }

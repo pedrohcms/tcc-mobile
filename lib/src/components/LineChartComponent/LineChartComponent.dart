@@ -34,7 +34,7 @@ class LineChartComponent extends StatelessWidget {
       ),
       primaryYAxis: NumericAxis(
         title: AxisTitle(
-          text: "Medidas(L)",
+          text: "Medidas (L)",
         ),
       ),
       series: _lineChartBloc.makeGraphicSeries(),
