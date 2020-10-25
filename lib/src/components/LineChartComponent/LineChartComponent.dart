@@ -1,26 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:charts_flutter/flutter.dart';
 import 'package:mobile/src/components/LineChartComponent/LineChartBloc.dart';
+import 'package:mobile/src/models/Measure.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class LineChartComponent extends StatelessWidget {
   final LineChartBloc _lineChartBloc = new LineChartBloc();
 
+  LineChartComponent(List<Measure> measures) {
+    _lineChartBloc.measures = measures;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return TimeSeriesChart(
-      _lineChartBloc.makeGraphicSeries(),
-      animationDuration: Duration(seconds: 3),
-      animate: true,
-      dateTimeFactory: LocalDateTimeFactory(),
-      domainAxis: DateTimeAxisSpec(
-        tickFormatterSpec: AutoDateTimeTickFormatterSpec(
-          day: TimeFormatterSpec(format: 'd', transitionFormat: 'dd/MM/yyyy'),
+    return SfCartesianChart(
+      enableAxisAnimation: true,
+      tooltipBehavior: TooltipBehavior(
+        color: Colors.blue,
+        enable: true,
+        shouldAlwaysShow: true,
+      ),
+      title: ChartTitle(
+        text: "Consumo de água em Litros",
+        textStyle: TextStyle(
+          color: Colors.blue,
+          fontSize: 23,
+          fontWeight: FontWeight.w500,
         ),
       ),
-      defaultRenderer: LineRendererConfig(includePoints: true),
-      behaviors: [
-        SeriesLegend(),
-      ],
+      primaryXAxis: CategoryAxis(
+        title: AxisTitle(
+          text: "Data",
+        ),
+      ),
+      primaryYAxis: NumericAxis(
+        title: AxisTitle(
+          text: "Medidas(L)",
+        ),
+      ),
+      series: _lineChartBloc.makeGraphicSeries(),
     );
   }
 }

@@ -1,35 +1,47 @@
-import 'package:charts_flutter/flutter.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/src/models/Measure.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class LineChartBloc {
-  List<Measure> makeGraphicData() {
-    return [
-      new Measure(startDate: "2020-10-02", sum: 20.0),
-      new Measure(startDate: "2020-10-15", sum: 300.0),
-      new Measure(startDate: "2020-10-25", sum: 400.0),
-      new Measure(startDate: "2020-11-01", sum: 10.0),
-      new Measure(startDate: "2020-11-06", sum: 30.0),
-      new Measure(startDate: "2020-11-07", sum: 50.0),
-      new Measure(startDate: "2020-12-08", sum: 100.0),
-    ];
-  }
+  List<Measure> measures;
 
-  List<Series<Measure, DateTime>> makeGraphicSeries() {
+  List<ChartSeries> makeGraphicSeries() {
+    DateFormat format = getDateTimeFormat();
+
     return [
-      new Series<Measure, DateTime>(
-        id: 'Medidas',
-        data: makeGraphicData(),
-        domainFn: (Measure measure, _) => DateTime.parse(measure.startDate),
-        measureFn: (Measure measure, _) => measure.sum,
-        colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
-      )
+      LineSeries<Measure, String>(
+        name: "Quantidade de água",
+        animationDuration: 3000,
+        color: Colors.blue,
+        dataSource: measures,
+        markerSettings: MarkerSettings(isVisible: true),
+        xValueMapper: (Measure measure, _) => format.format(
+          DateTime.parse(measure.startDate),
+        ),
+        yValueMapper: (Measure measure, _) => measure.sum,
+      ),
     ];
   }
 
   /// MÉTODO RESPONSÁVEL POR RETORNAR O FORMATO DA DATA DO GRÁFICO
-  String getGraphicDateFormat(DateTime startDate, DateTime endDate) {
-    if ((endDate.year - startDate.year) > 0) return "dd/MM/yyyy";
-    if ((endDate.month - startDate.month) > 0) return "dd/MM";
-    return "dd";
+  DateFormat getDateTimeFormat() {
+    DateTime startDate = DateTime.parse(measures.first.startDate);
+    DateTime endDate = DateTime.parse(measures.last.startDate);
+
+    if ((endDate.day - startDate.day > 0) &&
+        (endDate.month - startDate.month == 0) &&
+        (endDate.year - startDate.year == 0)) return DateFormat('dd', 'pt_BR');
+
+    print("passou 1");
+    if ((endDate.month - startDate.month > 0) &&
+        (endDate.year - startDate.year == 0))
+      return DateFormat('dd/MM', 'pt_BR');
+
+    print("passou 2");
+    if (endDate.year - startDate.year > 0) return DateFormat.yMd('pt_BR');
+
+    print("passou 3");
+    return DateFormat('dd', 'pt_BR').add_Hm();
   }
 }

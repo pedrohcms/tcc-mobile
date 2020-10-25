@@ -11,25 +11,30 @@ class ReportBloc extends ChangeNotifier {
   DateTimeRange dateTimeRange;
   bool _isLoading = false;
 
+  /// STREAM RESPONSÁVEL POR ANOTAR SE A TELA ESTÁ CARREGANDO
   StreamController<bool> _isLoadingStream = new StreamController<bool>();
   Sink<bool> get isLoadingInput => _isLoadingStream.sink;
   Stream<bool> get isLoadingOutput => _isLoadingStream.stream;
 
+  /// STREAM RESPONSÁVEL POR GRAVAR O INTERVALO DE DATA SELECIONANDO
   StreamController<DateTimeRange> _dateTimeRangeStream =
       new StreamController<DateTimeRange>();
   Sink<DateTimeRange> get dateTimeRangeInput => _dateTimeRangeStream.sink;
   Stream<DateTimeRange> get dateTimeRangeOutput => _dateTimeRangeStream.stream;
 
+  /// STREAM RESPONSÁVEL POR GRAVAR A SOMATÓRIA DAS MEDIDAS
   StreamController<double> _summedMeasuresStream =
       new StreamController<double>();
   Sink<double> get summedMeasuresInput => _summedMeasuresStream.sink;
   Stream<double> get summedMeasuresOutput => _summedMeasuresStream.stream;
 
+  /// STREAM RESPONSÁVEL POR GRAVAR A MEDIDAS RETORNADAS DA API
   StreamController<List<Measure>> _measuresListStream =
       new StreamController<List<Measure>>();
   Sink<List<Measure>> get measuresInput => _measuresListStream.sink;
   Stream<List<Measure>> get measuresOutput => _measuresListStream.stream;
 
+  /// MÉTODO RESPONSÁVEL POR BUSCAR AS MEDIDAS NA API
   Future<ApiResponseDTO> getMeasures(
     DateTimeRange pickedDateTimeRange,
     int farmId,
@@ -65,9 +70,13 @@ class ReportBloc extends ChangeNotifier {
         case 200:
           apiResponseDTO.title = "";
 
+          // CONVERTENDO O RESULTADO DA API
           List<Measure> measures = convertBodyToMeasures(response);
 
+          // ALIMENTANDO A STREAM DE MEDIDAS
           measuresInput.add(measures);
+
+          // ALIMENTANDO A STREAM DE SOMAS
           summedMeasuresInput.add(sumMeasures(measures));
 
           break;
@@ -94,8 +103,7 @@ class ReportBloc extends ChangeNotifier {
     List<Measure> measures = [];
 
     reponseBody.forEach((item) {
-      Measure measure = Measure.fromJson(item);
-      measures.add(measure);
+      measures.add(Measure.fromJson(item));
     });
 
     return measures;

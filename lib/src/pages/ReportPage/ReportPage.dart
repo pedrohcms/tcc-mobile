@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/src/components/LineChartComponent/LineChartComponent.dart';
 import 'package:mobile/src/models/Farm.dart';
+import 'package:mobile/src/models/Measure.dart';
 import 'package:mobile/src/pages/ReportPage/ReportBloc.dart';
 import 'package:mobile/src/providers/FarmProvider.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,7 @@ class _ReportPageState extends State<ReportPage> {
     return DateFormat.yMd('pt_BR').format(date);
   }
 
+  /// MÉTODO RESPONSÁVEL POR FORMATAR A SOMATÓRIA DAS MEDIDAS
   String formatSummedMeasures(double summedMeasures) {
     return NumberFormat("###,###,###.##", 'pt_BR').format(summedMeasures);
   }
@@ -42,8 +44,10 @@ class _ReportPageState extends State<ReportPage> {
 
     _reportBloc.getMeasures(
       DateTimeRange(
-        start: DateTime.now().subtract(
-          Duration(days: 1),
+        start: DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+          DateTime.now().day - 1,
         ),
         end: DateTime.now(),
       ),
@@ -167,28 +171,28 @@ class _ReportPageState extends State<ReportPage> {
                 SizedBox(
                   height: 5.0,
                 ),
-                ClipRRect(
-                  child: Container(
-                    child: Text(
-                      "Consumo de água em Litros/Dia: ",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 23,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
                 Container(
                   height: 400,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 8.0,
-                      right: 8.0,
-                      bottom: 10.0,
-                    ),
-                    child: LineChartComponent(),
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      Container(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 8.0,
+                            right: 8.0,
+                            bottom: 10.0,
+                          ),
+                          child: StreamBuilder<List<Measure>>(
+                            stream: _reportBloc.measuresOutput,
+                            initialData: [],
+                            builder: (context, snapshot) {
+                              return LineChartComponent(snapshot.data);
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 )
               ],
