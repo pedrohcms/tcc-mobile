@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:mobile/src/pages/HomePage/HomePage.dart';
 import 'package:mobile/src/pages/FarmListPage/FarmListPage.dart';
 import 'package:mobile/src/pages/RegisterFarmPage/RegisterFarmPage.dart';

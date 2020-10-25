@@ -29,12 +29,6 @@ class ApiResponseDTO {
     data = json.data;
   }
 
-  ApiResponseDTO.fromObject(Object object) {
-    print('Passou no fromObject');
-    print(object);
-    print(object.toString());
-  }
-
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['title'] = this.title;

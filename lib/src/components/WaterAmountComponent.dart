@@ -30,7 +30,7 @@ class WaterAmountComponent extends StatelessWidget {
               height: 10,
             ),
             Text(
-              "${new NumberFormat("###,###,###.##", 'pt_BR').format(amount)} LITROS",
+              "${NumberFormat("###,###,###.##", 'pt_BR').format(amount)} LITROS",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
