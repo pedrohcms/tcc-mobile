@@ -9,6 +9,7 @@ import 'package:mobile/src/pages/ResetPasswordPage/ResetPasswordPage.dart';
 import 'package:mobile/src/providers/FarmProvider.dart';
 import 'package:mobile/src/providers/UserProvider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class App extends StatelessWidget {
   @override
@@ -35,6 +36,15 @@ class App extends StatelessWidget {
           "/home": (context) => HomePage(),
           "/report": (context) => ReportPage()
         },
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate
+        ],
+        supportedLocales: [
+          Locale('en', 'US'),
+          Locale('pt', 'BR'),
+        ],
       ),
     );
   }
