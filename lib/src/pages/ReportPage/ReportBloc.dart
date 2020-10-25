@@ -15,14 +15,20 @@ class ReportBloc extends ChangeNotifier {
   Sink<bool> get isLoadingInput => _isLoadingStream.sink;
   Stream<bool> get isLoadingOutput => _isLoadingStream.stream;
 
-  StreamController<DateTimeRange> _dateTimeRange =
+  StreamController<DateTimeRange> _dateTimeRangeStream =
       new StreamController<DateTimeRange>();
-  Sink<DateTimeRange> get dateTimeRangeInput => _dateTimeRange.sink;
-  Stream<DateTimeRange> get dateTimeRangeOutput => _dateTimeRange.stream;
+  Sink<DateTimeRange> get dateTimeRangeInput => _dateTimeRangeStream.sink;
+  Stream<DateTimeRange> get dateTimeRangeOutput => _dateTimeRangeStream.stream;
 
-  StreamController<double> _summedMeasures = new StreamController<double>();
-  Sink<double> get summedMeasuresInput => _summedMeasures.sink;
-  Stream<double> get summedMeasuresOutput => _summedMeasures.stream;
+  StreamController<double> _summedMeasuresStream =
+      new StreamController<double>();
+  Sink<double> get summedMeasuresInput => _summedMeasuresStream.sink;
+  Stream<double> get summedMeasuresOutput => _summedMeasuresStream.stream;
+
+  StreamController<List<Measure>> _measuresListStream =
+      new StreamController<List<Measure>>();
+  Sink<List<Measure>> get measuresInput => _measuresListStream.sink;
+  Stream<List<Measure>> get measuresOutput => _measuresListStream.stream;
 
   Future<ApiResponseDTO> getMeasures(
     DateTimeRange pickedDateTimeRange,
@@ -59,9 +65,10 @@ class ReportBloc extends ChangeNotifier {
         case 200:
           apiResponseDTO.title = "";
 
-          apiResponseDTO.data = convertBodyToMap(response);
+          List<Measure> measures = convertBodyToMeasures(response);
 
-          summedMeasuresInput.add(sumMeasures(response));
+          measuresInput.add(measures);
+          summedMeasuresInput.add(sumMeasures(measures));
 
           break;
         case 400:
@@ -81,26 +88,24 @@ class ReportBloc extends ChangeNotifier {
     return apiResponseDTO;
   }
 
-  Map<String, dynamic> convertBodyToMap(Response response) {
+  List<Measure> convertBodyToMeasures(Response response) {
     List<dynamic> reponseBody = jsonDecode(response.body);
 
-    Map<String, dynamic> convertedBody = {};
+    List<Measure> measures = [];
 
     reponseBody.forEach((item) {
       Measure measure = Measure.fromJson(item);
-      convertedBody[measure.startDate] = measure.sum;
+      measures.add(measure);
     });
 
-    return convertedBody;
+    return measures;
   }
 
-  double sumMeasures(Response response) {
-    List<dynamic> reponseBody = jsonDecode(response.body);
-
+  double sumMeasures(List<Measure> measures) {
     double result = 0.0;
 
-    reponseBody.forEach((item) {
-      result += Measure.fromJson(item).sum;
+    measures.forEach((measure) {
+      result += measure.sum;
     });
 
     return result;
@@ -109,8 +114,9 @@ class ReportBloc extends ChangeNotifier {
   @override
   void dispose() {
     _isLoadingStream.close();
-    _dateTimeRange.close();
-    _summedMeasures.close();
+    _dateTimeRangeStream.close();
+    _summedMeasuresStream.close();
+    _measuresListStream.close();
     super.dispose();
   }
 }
