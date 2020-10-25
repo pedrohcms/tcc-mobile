@@ -7,7 +7,11 @@ class LineChartBloc {
   List<Measure> measures;
 
   List<ChartSeries> makeGraphicSeries() {
-    DateFormat format = getDateTimeFormat();
+    DateFormat format;
+
+    if (measures.isNotEmpty) {
+      format = getDateTimeFormat();
+    }
 
     return [
       LineSeries<Measure, String>(
@@ -16,9 +20,11 @@ class LineChartBloc {
         color: Colors.blue,
         dataSource: measures,
         markerSettings: MarkerSettings(isVisible: true),
-        xValueMapper: (Measure measure, _) => format.format(
-          DateTime.parse(measure.startDate),
-        ),
+        xValueMapper: (Measure measure, _) => format != null
+            ? format.format(
+                DateTime.parse(measure.startDate),
+              )
+            : measure.startDate,
         yValueMapper: (Measure measure, _) => measure.sum,
       ),
     ];

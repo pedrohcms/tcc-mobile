@@ -18,19 +18,19 @@ class ReportBloc extends ChangeNotifier {
 
   /// STREAM RESPONSÁVEL POR GRAVAR O INTERVALO DE DATA SELECIONANDO
   StreamController<DateTimeRange> _dateTimeRangeStream =
-      new StreamController<DateTimeRange>();
+      new StreamController<DateTimeRange>.broadcast();
   Sink<DateTimeRange> get dateTimeRangeInput => _dateTimeRangeStream.sink;
   Stream<DateTimeRange> get dateTimeRangeOutput => _dateTimeRangeStream.stream;
 
   /// STREAM RESPONSÁVEL POR GRAVAR A SOMATÓRIA DAS MEDIDAS
   StreamController<double> _summedMeasuresStream =
-      new StreamController<double>();
+      new StreamController<double>.broadcast();
   Sink<double> get summedMeasuresInput => _summedMeasuresStream.sink;
   Stream<double> get summedMeasuresOutput => _summedMeasuresStream.stream;
 
   /// STREAM RESPONSÁVEL POR GRAVAR A MEDIDAS RETORNADAS DA API
   StreamController<List<Measure>> _measuresListStream =
-      new StreamController<List<Measure>>();
+      new StreamController<List<Measure>>.broadcast();
   Sink<List<Measure>> get measuresInput => _measuresListStream.sink;
   Stream<List<Measure>> get measuresOutput => _measuresListStream.stream;
 
@@ -41,9 +41,9 @@ class ReportBloc extends ChangeNotifier {
   ) async {
     _isLoading = !_isLoading;
     isLoadingInput.add(_isLoading);
+    print("começou");
 
     this.dateTimeRange = pickedDateTimeRange;
-    dateTimeRangeInput.add(pickedDateTimeRange);
 
     Map<String, dynamic> queries = {
       "farm_id": farmId,
@@ -56,6 +56,8 @@ class ReportBloc extends ChangeNotifier {
     Response response;
 
     ApiResponseDTO apiResponseDTO = ApiResponseDTO();
+
+    List<Measure> measures;
 
     try {
       response = await ApiService.makeRequest(
@@ -71,14 +73,7 @@ class ReportBloc extends ChangeNotifier {
           apiResponseDTO.title = "";
 
           // CONVERTENDO O RESULTADO DA API
-          List<Measure> measures = convertBodyToMeasures(response);
-
-          // ALIMENTANDO A STREAM DE MEDIDAS
-          measuresInput.add(measures);
-
-          // ALIMENTANDO A STREAM DE SOMAS
-          summedMeasuresInput.add(sumMeasures(measures));
-
+          measures = convertBodyToMeasures(response);
           break;
         case 400:
           apiResponseDTO.data = jsonDecode(response.body)["error"];
@@ -92,7 +87,20 @@ class ReportBloc extends ChangeNotifier {
       apiResponseDTO.message = 'Erro no servidor';
     }
 
-    isLoadingInput.add(!_isLoading);
+    _isLoading = !_isLoading;
+    isLoadingInput.add(_isLoading);
+    print("acabou");
+
+    print(measures);
+    // ALIMENTANDO A STREAM DE MEDIDAS
+    measuresInput.add(measures);
+
+    // ALIMENTANDO A STREAM DE SOMAS
+    summedMeasuresInput.add(sumMeasures(measures));
+
+    print(pickedDateTimeRange);
+    // ALIMENTANDO A STREAM DE DATAS
+    dateTimeRangeInput.add(pickedDateTimeRange);
 
     return apiResponseDTO;
   }
