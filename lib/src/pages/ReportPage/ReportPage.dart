@@ -129,7 +129,6 @@ class _ReportPageState extends State<ReportPage> {
                                   stream: _reportBloc.summedMeasuresOutput,
                                   initialData: 0.0,
                                   builder: (context, snapshot) {
-                                    print(snapshot.data);
                                     return Text(
                                       "Quantidade de Litros: ${formatSummedMeasures(snapshot.data)} L",
                                       textAlign: TextAlign.center,
@@ -182,8 +181,6 @@ class _ReportPageState extends State<ReportPage> {
                           child: StreamBuilder<DateTimeRange>(
                             stream: _reportBloc.dateTimeRangeOutput,
                             builder: (context, snapshot) {
-                              print(snapshot.data);
-
                               return Text(
                                 snapshot.data != null
                                     ? "${formatDate(snapshot.data.start)} - ${formatDate(snapshot.data.end)}"
@@ -215,12 +212,6 @@ class _ReportPageState extends State<ReportPage> {
                                   stream: _reportBloc.measuresOutput,
                                   initialData: [],
                                   builder: (context, snapshot) {
-                                    print(snapshot.data);
-
-                                    if (!snapshot.hasData) {
-                                      return LinearProgressIndicator();
-                                    }
-
                                     return LineChartComponent(snapshot.data);
                                   },
                                 ),

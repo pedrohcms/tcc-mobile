@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/models/Measure.dart';
 import 'package:mobile/src/services/ApiService.dart';
+import 'package:rxdart/rxdart.dart';
 
 class ReportBloc extends ChangeNotifier {
   DateTimeRange dateTimeRange;
@@ -17,20 +18,19 @@ class ReportBloc extends ChangeNotifier {
   Stream<bool> get isLoadingOutput => _isLoadingStream.stream;
 
   /// STREAM RESPONSÁVEL POR GRAVAR O INTERVALO DE DATA SELECIONANDO
-  StreamController<DateTimeRange> _dateTimeRangeStream =
-      new StreamController<DateTimeRange>.broadcast();
+  BehaviorSubject<DateTimeRange> _dateTimeRangeStream =
+      new BehaviorSubject<DateTimeRange>();
   Sink<DateTimeRange> get dateTimeRangeInput => _dateTimeRangeStream.sink;
   Stream<DateTimeRange> get dateTimeRangeOutput => _dateTimeRangeStream.stream;
 
   /// STREAM RESPONSÁVEL POR GRAVAR A SOMATÓRIA DAS MEDIDAS
-  StreamController<double> _summedMeasuresStream =
-      new StreamController<double>.broadcast();
+  BehaviorSubject<double> _summedMeasuresStream = new BehaviorSubject<double>();
   Sink<double> get summedMeasuresInput => _summedMeasuresStream.sink;
   Stream<double> get summedMeasuresOutput => _summedMeasuresStream.stream;
 
   /// STREAM RESPONSÁVEL POR GRAVAR A MEDIDAS RETORNADAS DA API
-  StreamController<List<Measure>> _measuresListStream =
-      new StreamController<List<Measure>>.broadcast();
+  BehaviorSubject<List<Measure>> _measuresListStream =
+      new BehaviorSubject<List<Measure>>();
   Sink<List<Measure>> get measuresInput => _measuresListStream.sink;
   Stream<List<Measure>> get measuresOutput => _measuresListStream.stream;
 
@@ -41,12 +41,12 @@ class ReportBloc extends ChangeNotifier {
   ) async {
     _isLoading = !_isLoading;
     isLoadingInput.add(_isLoading);
-    print("começou");
 
     this.dateTimeRange = pickedDateTimeRange;
 
+    // CRIANDO AS QUERIES QUE SÃO ENVIADAS PARA API
     Map<String, dynamic> queries = {
-      "farm_id": farmId,
+      "farm_id": 30,
       "startDate": pickedDateTimeRange.start,
       "endDate": pickedDateTimeRange.end,
       "orderBy": "asc",
@@ -54,10 +54,7 @@ class ReportBloc extends ChangeNotifier {
     };
 
     Response response;
-
     ApiResponseDTO apiResponseDTO = ApiResponseDTO();
-
-    List<Measure> measures;
 
     try {
       response = await ApiService.makeRequest(
@@ -73,34 +70,35 @@ class ReportBloc extends ChangeNotifier {
           apiResponseDTO.title = "";
 
           // CONVERTENDO O RESULTADO DA API
-          measures = convertBodyToMeasures(response);
+          List<Measure> measures = convertBodyToMeasures(response);
+
+          // ALIMENTANDO A STREAM DE MEDIDAS
+          measuresInput.add(measures);
+
+          // ALIMENTANDO A STREAM DE SOMAS
+          summedMeasuresInput.add(sumMeasures(measures));
+
+          // ALIMENTANDO A STREAM DE DATAS
+          dateTimeRangeInput.add(pickedDateTimeRange);
           break;
         case 400:
-          apiResponseDTO.data = jsonDecode(response.body)["error"];
+          apiResponseDTO.data = jsonDecode(response.body);
+          _isLoadingStream.addError(apiResponseDTO);
           break;
       }
     } on SocketException {
       apiResponseDTO.message = 'O dispositivo está sem internet';
+      _isLoadingStream.addError(apiResponseDTO);
     } on TimeoutException {
       apiResponseDTO.message = 'O tempo de conexão foi excedido';
+      _isLoadingStream.addError(apiResponseDTO);
     } on HttpException {
       apiResponseDTO.message = 'Erro no servidor';
+      _isLoadingStream.addError(apiResponseDTO);
     }
 
     _isLoading = !_isLoading;
     isLoadingInput.add(_isLoading);
-    print("acabou");
-
-    print(measures);
-    // ALIMENTANDO A STREAM DE MEDIDAS
-    measuresInput.add(measures);
-
-    // ALIMENTANDO A STREAM DE SOMAS
-    summedMeasuresInput.add(sumMeasures(measures));
-
-    print(pickedDateTimeRange);
-    // ALIMENTANDO A STREAM DE DATAS
-    dateTimeRangeInput.add(pickedDateTimeRange);
 
     return apiResponseDTO;
   }
