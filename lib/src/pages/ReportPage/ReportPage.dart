@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/components/LineChartComponent/LineChartComponent.dart';
 import 'package:mobile/src/models/Farm.dart';
 import 'package:mobile/src/models/Measure.dart';
 import 'package:mobile/src/pages/ReportPage/ReportBloc.dart';
 import 'package:mobile/src/providers/FarmProvider.dart';
+import 'package:mobile/src/services/TokenService.dart';
 import 'package:provider/provider.dart';
 
 class ReportPage extends StatefulWidget {
@@ -59,7 +61,57 @@ class _ReportPageState extends State<ReportPage> {
           stream: _reportBloc.isLoadingOutput,
           initialData: false,
           builder: (context, snapshot) {
-            // CASO ESTEJA
+            if (snapshot.hasError) {
+              ApiResponseDTO apiResponseDTO = ApiResponseDTO.fromJson(
+                snapshot.error,
+              );
+
+              // NESSE CASO VAMOS MANDAR O USUÁRIO PARA O LOGIN
+              if (apiResponseDTO.sendToLogin) {
+                return Center(
+                  child: Column(
+                    children: [
+                      Text("${apiResponseDTO.message}"),
+                      FlatButton(
+                        child: Text('OK'),
+                        onPressed: () {
+                          TokenService.deleteToken();
+
+                          Navigator.popAndPushNamed(context, '/');
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("${apiResponseDTO.message}"),
+                      FlatButton(
+                        child: Text('Tentar novamente'),
+                        onPressed: () {
+                          _reportBloc.getMeasures(
+                            DateTimeRange(
+                              start: DateTime(
+                                DateTime.now().year,
+                                DateTime.now().month,
+                                DateTime.now().day - 1,
+                              ),
+                              end: DateTime.now(),
+                            ),
+                            _farm.id,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              }
+            }
+
+            // CASO ESTEJA CARREGANDO MOSTRAMOS O LOADING
             if (snapshot.data) {
               return Center(
                 child: Column(

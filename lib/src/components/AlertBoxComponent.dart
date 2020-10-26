@@ -6,7 +6,7 @@ import 'package:mobile/src/services/TokenService.dart';
 class AlertBoxComponent extends StatelessWidget {
   final ApiResponseDTO data;
 
-  AlertBoxComponent({this.data});
+  AlertBoxComponent({@required this.data});
 
   @override
   Widget build(BuildContext context) {
