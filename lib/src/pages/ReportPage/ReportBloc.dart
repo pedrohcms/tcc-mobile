@@ -46,7 +46,7 @@ class ReportBloc extends ChangeNotifier {
 
     // CRIANDO AS QUERIES QUE SÃO ENVIADAS PARA API
     Map<String, dynamic> queries = {
-      "farm_id": 30,
+      "farm_id": farmId,
       "startDate": pickedDateTimeRange.start,
       "endDate": pickedDateTimeRange.end,
       "orderBy": "asc",
