@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/src/models/Measure.dart';
+import 'package:mobile/src/models/SectorMeasure.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class LineChartBloc {
-  List<Measure> measures;
+  List<SectorMeasure> sectorMeasures;
+
+  List<Measure> makeGraphicData() {
+    List<Measure> measures = [];
+
+    sectorMeasures.forEach((sectorMeasures) {
+      sectorMeasures.measures.forEach((measure) => measures.add(measure));
+    });
+
+    return measures;
+  }
 
   List<ChartSeries> makeGraphicSeries() {
     DateFormat format;
 
-    if (measures.isNotEmpty) {
+    if (sectorMeasures.isNotEmpty) {
       format = getDateTimeFormat();
     }
+
+    List<Measure> measures = makeGraphicData();
 
     return [
       LineSeries<Measure, String>(
@@ -22,18 +35,20 @@ class LineChartBloc {
         markerSettings: MarkerSettings(isVisible: true),
         xValueMapper: (Measure measure, _) => format != null
             ? format.format(
-                DateTime.parse(measure.startDate),
+                DateTime.parse(measure.createdAt),
               )
-            : measure.startDate,
-        yValueMapper: (Measure measure, _) => measure.sum,
+            : measure.createdAt,
+        yValueMapper: (Measure measure, _) => measure.waterAmount,
       ),
     ];
   }
 
   /// MÉTODO RESPONSÁVEL POR RETORNAR O FORMATO DA DATA DO GRÁFICO
   DateFormat getDateTimeFormat() {
-    DateTime startDate = DateTime.parse(measures.first.startDate);
-    DateTime endDate = DateTime.parse(measures.last.startDate);
+    DateTime startDate =
+        DateTime.parse(sectorMeasures.first.measures.first.createdAt);
+    DateTime endDate =
+        DateTime.parse(sectorMeasures.first.measures.last.createdAt);
 
     if ((endDate.day - startDate.day > 0) &&
         (endDate.month - startDate.month == 0) &&

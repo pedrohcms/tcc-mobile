@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/src/components/LineChartComponent/LineChartBloc.dart';
-import 'package:mobile/src/models/Measure.dart';
+import 'package:mobile/src/models/SectorMeasure.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class LineChartComponent extends StatelessWidget {
   final LineChartBloc _lineChartBloc = new LineChartBloc();
 
-  LineChartComponent(List<Measure> measures) {
-    _lineChartBloc.measures = measures;
+  LineChartComponent(List<SectorMeasure> sectorMeasures) {
+    _lineChartBloc.sectorMeasures = sectorMeasures;
   }
 
   @override

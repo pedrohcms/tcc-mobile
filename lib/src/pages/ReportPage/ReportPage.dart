@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/components/LineChartComponent/LineChartComponent.dart';
 import 'package:mobile/src/models/Farm.dart';
-import 'package:mobile/src/models/Measure.dart';
+import 'package:mobile/src/models/SectorMeasure.dart';
 import 'package:mobile/src/pages/ReportPage/ReportBloc.dart';
 import 'package:mobile/src/providers/FarmProvider.dart';
 import 'package:mobile/src/services/TokenService.dart';
@@ -260,7 +260,7 @@ class _ReportPageState extends State<ReportPage> {
                                   right: 8.0,
                                   bottom: 10.0,
                                 ),
-                                child: StreamBuilder<List<Measure>>(
+                                child: StreamBuilder<List<SectorMeasure>>(
                                   stream: _reportBloc.measuresOutput,
                                   initialData: [],
                                   builder: (context, snapshot) {

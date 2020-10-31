@@ -1,38 +1,35 @@
-import 'package:mobile/src/models/Measure.dart';
+import 'package:mobile/src/models/SectorMeasure.dart';
 
 class Home {
-  Measure todayMeasures;
-  Measure lastTwelveHoursMeasures;
-  Measure yesterdayMeasures;
+  List<SectorMeasure> todayMeasures;
+  List<SectorMeasure> lastTwelveHoursMeasures;
+  List<SectorMeasure> yesterdayMeasures;
 
-  Home(
-      {this.todayMeasures,
-      this.lastTwelveHoursMeasures,
-      this.yesterdayMeasures});
+  Home({
+    this.todayMeasures,
+    this.lastTwelveHoursMeasures,
+    this.yesterdayMeasures,
+  });
 
   Home.fromJson(Map<String, dynamic> json) {
-    todayMeasures = json['todayMeasures'] != null
-        ? new Measure.fromJson(json['todayMeasures'])
-        : null;
-    lastTwelveHoursMeasures = json['lastTwelveHoursMeasures'] != null
-        ? new Measure.fromJson(json['lastTwelveHoursMeasures'])
-        : null;
-    yesterdayMeasures = json['yesterdayMeasures'] != null
-        ? new Measure.fromJson(json['yesterdayMeasures'])
-        : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.todayMeasures != null) {
-      data['todayMeasures'] = this.todayMeasures.toJson();
+    if (json['todayMeasures'] != null) {
+      print(json['todayMeasures']);
+      todayMeasures = new List<SectorMeasure>();
+      json['todayMeasures'].forEach((v) {
+        todayMeasures.add(new SectorMeasure.fromJson(v));
+      });
     }
-    if (this.lastTwelveHoursMeasures != null) {
-      data['lastTwelveHoursMeasures'] = this.lastTwelveHoursMeasures.toJson();
+    if (json['lastTwelveHoursMeasures'] != null) {
+      lastTwelveHoursMeasures = new List<SectorMeasure>();
+      json['lastTwelveHoursMeasures'].forEach((v) {
+        lastTwelveHoursMeasures.add(new SectorMeasure.fromJson(v));
+      });
     }
-    if (this.yesterdayMeasures != null) {
-      data['yesterdayMeasures'] = this.yesterdayMeasures.toJson();
+    if (json['yesterdayMeasures'] != null) {
+      yesterdayMeasures = new List<SectorMeasure>();
+      json['yesterdayMeasures'].forEach((v) {
+        yesterdayMeasures.add(new SectorMeasure.fromJson(v));
+      });
     }
-    return data;
   }
 }

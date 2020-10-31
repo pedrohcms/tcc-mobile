@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
-import 'package:mobile/src/models/Measure.dart';
+import 'package:mobile/src/models/SectorMeasure.dart';
 import 'package:mobile/src/services/ApiService.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -29,10 +29,11 @@ class ReportBloc extends ChangeNotifier {
   Stream<double> get summedMeasuresOutput => _summedMeasuresStream.stream;
 
   /// STREAM RESPONSÁVEL POR GRAVAR A MEDIDAS RETORNADAS DA API
-  BehaviorSubject<List<Measure>> _measuresListStream =
-      new BehaviorSubject<List<Measure>>();
-  Sink<List<Measure>> get measuresInput => _measuresListStream.sink;
-  Stream<List<Measure>> get measuresOutput => _measuresListStream.stream;
+  BehaviorSubject<List<SectorMeasure>> _sectorMeasuresListStream =
+      new BehaviorSubject<List<SectorMeasure>>();
+  Sink<List<SectorMeasure>> get measuresInput => _sectorMeasuresListStream.sink;
+  Stream<List<SectorMeasure>> get measuresOutput =>
+      _sectorMeasuresListStream.stream;
 
   /// MÉTODO RESPONSÁVEL POR BUSCAR AS MEDIDAS NA API
   Future<ApiResponseDTO> getMeasures(
@@ -46,11 +47,10 @@ class ReportBloc extends ChangeNotifier {
 
     // CRIANDO AS QUERIES QUE SÃO ENVIADAS PARA API
     Map<String, dynamic> queries = {
-      "farm_id": farmId,
+      "farmId": farmId,
       "startDate": pickedDateTimeRange.start,
       "endDate": pickedDateTimeRange.end,
-      "orderBy": "asc",
-      "queryType": "GROUP",
+      "queryType": "LIST",
     };
 
     Response response;
@@ -70,7 +70,7 @@ class ReportBloc extends ChangeNotifier {
           apiResponseDTO.title = "";
 
           // CONVERTENDO O RESULTADO DA API
-          List<Measure> measures = convertBodyToMeasures(response);
+          List<SectorMeasure> measures = convertBodyToSectorMeasures(response);
 
           // ALIMENTANDO A STREAM DE MEDIDAS
           measuresInput.add(measures);
@@ -103,23 +103,25 @@ class ReportBloc extends ChangeNotifier {
     return apiResponseDTO;
   }
 
-  List<Measure> convertBodyToMeasures(Response response) {
+  /// Método responsável por converter os dados de retorno da API em Objeto
+  List<SectorMeasure> convertBodyToSectorMeasures(Response response) {
     List<dynamic> reponseBody = jsonDecode(response.body);
 
-    List<Measure> measures = [];
+    List<SectorMeasure> sectorMeasures = [];
 
     reponseBody.forEach((item) {
-      measures.add(Measure.fromJson(item));
+      sectorMeasures.add(SectorMeasure.fromJson(item));
     });
 
-    return measures;
+    return sectorMeasures;
   }
 
-  double sumMeasures(List<Measure> measures) {
+  double sumMeasures(List<SectorMeasure> sectorMeasures) {
     double result = 0.0;
 
-    measures.forEach((measure) {
-      result += measure.sum;
+    sectorMeasures.forEach((sectorMeasure) {
+      sectorMeasure.measures
+          .forEach((measure) => result += measure.waterAmount);
     });
 
     return result;
@@ -130,7 +132,7 @@ class ReportBloc extends ChangeNotifier {
     _isLoadingStream.close();
     _dateTimeRangeStream.close();
     _summedMeasuresStream.close();
-    _measuresListStream.close();
+    _sectorMeasuresListStream.close();
     super.dispose();
   }
 }

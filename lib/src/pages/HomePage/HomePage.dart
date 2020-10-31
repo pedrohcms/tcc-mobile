@@ -177,17 +177,20 @@ class _HomePageState extends State<HomePage> {
                   [
                     WaterAmountComponent(
                       text: "QUANTIDADE DE ÁGUA USADA HOJE",
-                      amount: snapshot.data.todayMeasures.sum,
+                      amount: snapshot
+                          .data.todayMeasures.first.measures.first.waterAmount,
                       color: Colors.blue[200],
                     ),
                     WaterAmountComponent(
                       text: "QUANTIDADE DE ÁGUA USADA NAS ÚLTIMAS 12 HORAS",
-                      amount: snapshot.data.lastTwelveHoursMeasures.sum,
+                      amount: snapshot.data.lastTwelveHoursMeasures.first
+                          .measures.first.waterAmount,
                       color: Colors.blue,
                     ),
                     WaterAmountComponent(
                       text: "QUANTIDADE DE ÁGUA USADA NAS UĹTIMAS 24 HORAS",
-                      amount: snapshot.data.yesterdayMeasures.sum,
+                      amount: snapshot.data.yesterdayMeasures.first.measures
+                          .first.waterAmount,
                       color: Colors.blue[700],
                     ),
                   ],
