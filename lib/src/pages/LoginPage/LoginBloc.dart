@@ -40,7 +40,7 @@ class LoginBloc extends ChangeNotifier {
     try {
       response = await ApiService.makeRequest(
         method: "POST",
-        uri: "sessions",
+        uri: "/sessions",
         body: jsonEncode(body),
       );
 
@@ -50,8 +50,9 @@ class LoginBloc extends ChangeNotifier {
 
       switch (response.statusCode) {
         case 200:
-          TokenService.setToken(responseBody["token"]);
+          TokenService.setToken(responseBody["user"]["token"]);
           apiResponseDTO.title = "Sucesso";
+          apiResponseDTO.data = responseBody["user"];
           break;
 
         case 400:

@@ -19,11 +19,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  syncfusion_flutter_charts: ^18.3.42
   cupertino_icons: ^0.1.2
   http: ^0.12.2
   shared_preferences: ^0.5.8
   email_validator: "^1.0.0"
   provider: ^4.3.2+2
+  intl: ^0.16.1
+  rxdart: ^0.24.1
 
 dev_dependencies:
   flutter_test:
@@ -75,3 +81,4 @@ flutter:
     - images/cad_fazenda.png
     - images/home.png
     - images/home2.png
+    - images/relatorio.png

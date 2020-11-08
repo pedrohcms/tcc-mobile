@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-
 import 'package:mobile/src/pages/HomePage/HomePage.dart';
 import 'package:mobile/src/pages/FarmListPage/FarmListPage.dart';
 import 'package:mobile/src/pages/RegisterFarmPage/RegisterFarmPage.dart';
 import 'package:mobile/src/pages/LoginPage/LoginPage.dart';
+import 'package:mobile/src/pages/ReportPage/ReportPage.dart';
 import 'package:mobile/src/pages/ResetPasswordPage/ResetPasswordPage.dart';
 import 'package:mobile/src/providers/FarmProvider.dart';
+import 'package:mobile/src/providers/UserProvider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class App extends StatelessWidget {
   @override
@@ -15,7 +17,10 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<FarmProvider>(
           create: (_) => FarmProvider(),
-        )
+        ),
+        ChangeNotifierProvider<UserProvider>(
+          create: (_) => UserProvider(),
+        ),
       ],
       child: MaterialApp(
         title: 'Sistema de Irrigação Simplificado',
@@ -28,7 +33,17 @@ class App extends StatelessWidget {
           "/register_farm": (context) => RegisterFarmPage(),
           "/farm_list": (context) => FarmListPage(),
           "/home": (context) => HomePage(),
+          "/report": (context) => ReportPage()
         },
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate
+        ],
+        supportedLocales: [
+          Locale('en', 'US'),
+          Locale('pt', 'BR'),
+        ],
       ),
     );
   }
