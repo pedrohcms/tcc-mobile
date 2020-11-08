@@ -6,18 +6,32 @@ import 'package:http/http.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/services/ApiService.dart';
 
-class RegisterFarmBloc extends ChangeNotifier {
+class RegisterUserBloc extends ChangeNotifier {
+  bool passwordFieldVisibility = true;
+
+  final StreamController<bool> _passwordFieldVisibilityController =
+      StreamController<bool>.broadcast();
+  Sink<bool> get passwordFieldVisibilityInput =>
+      _passwordFieldVisibilityController.sink;
+  Stream<bool> get passwordFieldVisibilityOutput =>
+      _passwordFieldVisibilityController.stream;
+
   // STREAM PARA CONTROLLAR O LOADING
   final StreamController<bool> _isLoadingController = StreamController<bool>();
   Sink<bool> get isLoadingInput => _isLoadingController.sink;
   Stream<bool> get isLoadingOutput => _isLoadingController.stream;
 
   /// MÉTODO RESPONSÁVEL POR FAZER A REQUSIÇÃO PARA CADASTRO DE FAZENDA
-  Future<ApiResponseDTO> store(String name, String email, String password) async {
+  Future<ApiResponseDTO> store(
+      String name, String email, String password) async {
     // SINALIZA PARA A TELA MOSTRAR O CARREGAMENTO
     _isLoadingController.add(true);
 
-    Map<String, dynamic> body = {"name": name, "email": email, "password": password};
+    Map<String, dynamic> body = {
+      "name": name,
+      "email": email,
+      "password": password
+    };
 
     Response response;
 
@@ -64,9 +78,17 @@ class RegisterFarmBloc extends ChangeNotifier {
     return apiResponseDTO;
   }
 
+  void changePasswordFieldVisibility() {
+    passwordFieldVisibility = !passwordFieldVisibility;
+    passwordFieldVisibilityInput.add(passwordFieldVisibility);
+
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _isLoadingController.close();
+    _passwordFieldVisibilityController.close();
     super.dispose();
   }
 }

@@ -3,6 +3,7 @@ import 'package:mobile/src/pages/HomePage/HomePage.dart';
 import 'package:mobile/src/pages/FarmListPage/FarmListPage.dart';
 import 'package:mobile/src/pages/RegisterFarmPage/RegisterFarmPage.dart';
 import 'package:mobile/src/pages/LoginPage/LoginPage.dart';
+import 'package:mobile/src/pages/RegisterUserPage/RegisterUserPage.dart';
 import 'package:mobile/src/pages/ReportPage/ReportPage.dart';
 import 'package:mobile/src/pages/ResetPasswordPage/ResetPasswordPage.dart';
 import 'package:mobile/src/providers/FarmProvider.dart';
@@ -33,7 +34,8 @@ class App extends StatelessWidget {
           "/register_farm": (context) => RegisterFarmPage(),
           "/farm_list": (context) => FarmListPage(),
           "/home": (context) => HomePage(),
-          "/report": (context) => ReportPage()
+          "/report": (context) => ReportPage(),
+          "/register_user": (context) => RegisterUserPage()
         },
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
