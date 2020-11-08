@@ -13,7 +13,6 @@ class Home {
 
   Home.fromJson(Map<String, dynamic> json) {
     if (json['todayMeasures'] != null) {
-      print(json['todayMeasures']);
       todayMeasures = new List<SectorMeasure>();
       json['todayMeasures'].forEach((v) {
         todayMeasures.add(new SectorMeasure.fromJson(v));

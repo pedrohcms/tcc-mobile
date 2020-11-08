@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/src/pages/HomePage/HomePage.dart';
 import 'package:mobile/src/pages/FarmListPage/FarmListPage.dart';
-import 'package:mobile/src/pages/LinkCustomerPage/LinkCustomerPage.dart';
+import 'package:mobile/src/pages/LinkUserPage/LinkUserPage.dart';
 import 'package:mobile/src/pages/RegisterFarmPage/RegisterFarmPage.dart';
 import 'package:mobile/src/pages/LoginPage/LoginPage.dart';
 import 'package:mobile/src/pages/RegisterUserPage/RegisterUserPage.dart';
@@ -37,7 +37,7 @@ class App extends StatelessWidget {
           "/home": (context) => HomePage(),
           "/report": (context) => ReportPage(),
           "/register_user": (context) => RegisterUserPage(),
-          "/link_customer": (context) => LinkCustomerPage()
+          "/link_customer": (context) => LinkUserPage()
         },
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
