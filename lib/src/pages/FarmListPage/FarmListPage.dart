@@ -84,7 +84,12 @@ class _FarmListPageState extends State<FarmListPage> {
                       ),
                     ],
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      "/register_user",
+                    );
+                  },
                 ),
               ),
               Expanded(
