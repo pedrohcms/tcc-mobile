@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 import 'package:mobile/src/services/TokenService.dart';
 
 class ApiService {
-  static final String _baseUrl = 'http://10.0.0.167:3333/v1';
+  static final String _baseUrl = 'http://192.168.1.106:3333/v1';
   static final int _timeOut = 20;
 
   /// Responsible for making the request to the API

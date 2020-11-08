@@ -271,7 +271,168 @@ class _ReportPageState extends State<ReportPage> {
                             ),
                           ],
                         ),
-                      )
+                      ),
+
+                      // SETORES
+                      //setor 1
+                      ListView(
+                        shrinkWrap: true,
+                        children: [
+                          ClipRRect(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.blue[400],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Setor: s001",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 25),
+                                  ),
+                                  Text("Cultura: Milho",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20)),
+                                  Text("Umidade Atual: 20%",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20)),
+                                  Text("Umidade Ideal: 40%",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20)),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          //SETOR 2
+                          ClipRRect(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.blue[400],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Setor: s001",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 25),
+                                  ),
+                                  Text("Cultura: Milho",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20)),
+                                  Text("Umidade Atual: 20%",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20)),
+                                  Text("Umidade Ideal: 40%",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20)),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          //SETOR 3
+
+                          ClipRRect(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.blue[400],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Setor: s001",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 25),
+                                  ),
+                                  Text("Cultura: Milho",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20)),
+                                  Text("Umidade Atual: 20%",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20)),
+                                  Text("Umidade Ideal: 40%",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20)),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          //SETOR 4
+                          ClipRRect(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.blue[400],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Setor: s001",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 25),
+                                  ),
+                                  Text("Cultura: Milho",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20)),
+                                  Text("Umidade Atual: 20%",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20)),
+                                  Text("Umidade Ideal: 40%",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
