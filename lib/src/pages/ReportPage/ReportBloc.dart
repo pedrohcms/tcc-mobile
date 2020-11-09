@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
+import 'package:mobile/src/models/Measure.dart';
 import 'package:mobile/src/models/SectorMeasure.dart';
 import 'package:mobile/src/services/ApiService.dart';
 import 'package:rxdart/rxdart.dart';
@@ -116,6 +117,7 @@ class ReportBloc extends ChangeNotifier {
     return sectorMeasures;
   }
 
+  /// Método responsável efetuar a soma das medidas da API
   double sumMeasures(List<SectorMeasure> sectorMeasures) {
     double result = 0.0;
 
@@ -123,6 +125,21 @@ class ReportBloc extends ChangeNotifier {
       sectorMeasure.measures
           .forEach((measure) => result += measure.waterAmount);
     });
+
+    return result;
+  }
+
+  /// Método responsável por efetuar a soma das medidas de umidade
+  double sumMoisture(List<Measure> measures) {
+    if (measures.length == 0) return 0;
+
+    double result = 0.0;
+
+    measures.forEach((measure) {
+      result += measure.moisture;
+    });
+
+    result = result / measures.length;
 
     return result;
   }
