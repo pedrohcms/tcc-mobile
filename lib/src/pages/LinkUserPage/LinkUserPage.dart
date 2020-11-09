@@ -1,5 +1,8 @@
+import 'package:email_validator/email_validator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
+import 'package:mobile/src/components/AlertBoxComponent.dart';
 import 'package:mobile/src/models/Farm.dart';
 import 'package:mobile/src/models/User.dart';
 import 'package:mobile/src/pages/LinkUserPage/LinkUserBloc.dart';
@@ -15,6 +18,8 @@ class LinkUserPage extends StatefulWidget {
 class _LinkUserPageState extends State<LinkUserPage> {
   LinkUserBloc _linkUserBloc = LinkUserBloc();
   Farm _farm;
+  final _formKey = GlobalKey<FormState>();
+  final _emailFieldController = TextEditingController();
 
   void getLinkedUsers() {
     _linkUserBloc.getLinkedUsers(_farm.id);
@@ -38,7 +43,7 @@ class _LinkUserPageState extends State<LinkUserPage> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
-          "Vincular novo cliente",
+          "Vincular novo usuário",
           style: TextStyle(fontSize: 18, color: Colors.white),
         ),
       ),
@@ -53,57 +58,100 @@ class _LinkUserPageState extends State<LinkUserPage> {
             SizedBox(
               height: 50,
             ),
-            Container(
-              alignment: Alignment.center,
-              child: TextFormField(
-                decoration: new InputDecoration(
-                  border: new OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(60.0),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    child: TextFormField(
+                      validator: (value) {
+                        if (!EmailValidator.validate(value))
+                          return 'Por favor insira um e-mail válido';
+
+                        return null;
+                      },
+                      controller: _emailFieldController,
+                      decoration: new InputDecoration(
+                        border: new OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(
+                            const Radius.circular(60.0),
+                          ),
+                        ),
+                        hintStyle: TextStyle(
+                          fontSize: 13,
+                          height: 1,
+                        ),
+                        hintText: "E-mail",
+                        filled: true,
+                        fillColor: Colors.white54,
+                      ),
                     ),
                   ),
-                  hintStyle: TextStyle(
-                    fontSize: 13,
-                    height: 1,
+                  SizedBox(
+                    height: 20,
                   ),
-                  hintText: "E-mail",
-                  filled: true,
-                  fillColor: Colors.white54,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              height: 50,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.bottomRight,
-                  stops: [0.3, 1],
-                  colors: [
-                    Color.fromRGBO(0, 0, 255, 100),
-                    Color.fromRGBO(0, 0, 252, 150),
-                  ],
-                ),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(60.0),
-                ),
-              ),
-              child: SizedBox.expand(
-                child: FlatButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Vincular",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
+                  Container(
+                    height: 50,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.bottomRight,
+                        stops: [0.3, 1],
+                        colors: [
+                          Color.fromRGBO(0, 0, 255, 100),
+                          Color.fromRGBO(0, 0, 252, 150),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(60.0),
+                      ),
                     ),
-                    textAlign: TextAlign.center,
+                    child: SizedBox.expand(
+                      child: FlatButton(
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            ApiResponseDTO result =
+                                await _linkUserBloc.linkUserFarm(
+                              this._farm.address,
+                              _emailFieldController.text,
+                            );
+
+                            showDialog(
+                              context: context,
+                              builder: (_) => AlertBoxComponent(data: result),
+                            );
+
+                            if (result.statusCode == 201) getLinkedUsers();
+                          }
+                        },
+                        child: StreamBuilder<bool>(
+                          stream: _linkUserBloc.isLoadingOutput,
+                          initialData: false,
+                          builder: (context, snapshot) {
+                            if (!snapshot.data) {
+                              return Text(
+                                "Vincular",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                ),
+                                textAlign: TextAlign.center,
+                              );
+                            }
+
+                            return CircularProgressIndicator(
+                              backgroundColor: Colors.grey,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
             SizedBox(
@@ -111,7 +159,7 @@ class _LinkUserPageState extends State<LinkUserPage> {
             ),
             Expanded(
               child: StreamBuilder<List<User>>(
-                stream: _linkUserBloc.linkedUsersoutput,
+                stream: _linkUserBloc.linkedUsersOutput,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     ApiResponseDTO apiResponseDTO = ApiResponseDTO.fromJson(
@@ -227,7 +275,50 @@ class _LinkUserPageState extends State<LinkUserPage> {
                               Icons.delete,
                               color: Colors.red,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              ApiResponseDTO result = new ApiResponseDTO();
+
+                              showDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (_) {
+                                  return CupertinoAlertDialog(
+                                    title: Text(
+                                      "Tem certeza que deseja desvincular o usuário?",
+                                    ),
+                                    actions: [
+                                      FlatButton(
+                                        child: Text('Sim'),
+                                        onPressed: () async {
+                                          result = await _linkUserBloc
+                                              .deleteUserFarmLink(
+                                            this._farm.address,
+                                            snapshot.data[index].email,
+                                          );
+
+                                          Navigator.of(context).pop();
+
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) =>
+                                                AlertBoxComponent(data: result),
+                                          );
+
+                                          if (result.statusCode == 200)
+                                            getLinkedUsers();
+                                        },
+                                      ),
+                                      FlatButton(
+                                        child: Text('Cancelar'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
                           )
                         ],
                       );
