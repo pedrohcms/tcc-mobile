@@ -17,6 +17,8 @@ class FarmListBloc extends ChangeNotifier {
 
   /// Método responsável por buscar as fazendas na API
   Future<void> index() async {
+    farmListInput.add(null);
+
     ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
 
     try {

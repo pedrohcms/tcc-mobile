@@ -21,6 +21,8 @@ class LinkUserBloc extends ChangeNotifier {
 
   /// MÉTODO RESPONSÁVEL POR RECUPERAR OS USUÁRIOS VINCULADOS A UMA FAZENDA
   Future<void> getLinkedUsers(int farmId) async {
+    linkedUsersInput.add(null);
+
     ApiResponseDTO apiResponseDTO = ApiResponseDTO();
 
     Response response;

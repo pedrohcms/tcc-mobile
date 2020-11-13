@@ -7,6 +7,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 class LineChartBloc {
   List<SectorMeasure> sectorMeasures;
 
+  /// Método responsável por preparar os dados que serão exibidos no gráfico.
   List<Measure> makeGraphicData() {
     List<Measure> measures = [];
 
@@ -17,14 +18,18 @@ class LineChartBloc {
     return measures;
   }
 
+  /// Método responsável por prepara as Series de dados para o gráfico.
   List<ChartSeries> makeGraphicSeries() {
+    List<Measure> measures = makeGraphicData();
+
     DateFormat format;
 
-    if (sectorMeasures.isNotEmpty) {
-      format = getDateTimeFormat();
+    for (SectorMeasure item in sectorMeasures) {
+      if (item.measures.isNotEmpty) {
+        format = getDateTimeFormat();
+        break;
+      }
     }
-
-    List<Measure> measures = makeGraphicData();
 
     return [
       LineSeries<Measure, String>(
