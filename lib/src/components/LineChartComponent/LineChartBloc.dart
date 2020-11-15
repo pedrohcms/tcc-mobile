@@ -40,7 +40,7 @@ class LineChartBloc {
         markerSettings: MarkerSettings(isVisible: true),
         xValueMapper: (Measure measure, _) => format != null
             ? format.format(
-                DateTime.parse(measure.createdAt),
+                DateTime.parse(measure.createdAt).toLocal(),
               )
             : measure.createdAt,
         yValueMapper: (Measure measure, _) => measure.waterAmount,
