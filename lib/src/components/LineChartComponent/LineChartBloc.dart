@@ -24,13 +24,10 @@ class LineChartBloc {
 
     DateFormat format;
 
-    for (SectorMeasure item in sectorMeasures) {
-      if (item.measures.isNotEmpty) {
-        format = getDateTimeFormat();
-        break;
-      }
+    if(measures.isNotEmpty) {
+      format = getDateTimeFormat(measures);
     }
-
+  
     return [
       LineSeries<Measure, String>(
         name: "Quantidade de água",
@@ -49,11 +46,11 @@ class LineChartBloc {
   }
 
   /// MÉTODO RESPONSÁVEL POR RETORNAR O FORMATO DA DATA DO GRÁFICO
-  DateFormat getDateTimeFormat() {
+  DateFormat getDateTimeFormat(List<Measure> measures) {
     DateTime startDate =
-        DateTime.parse(sectorMeasures.first.measures.first.createdAt);
+        DateTime.parse(measures.first.createdAt);
     DateTime endDate =
-        DateTime.parse(sectorMeasures.first.measures.last.createdAt);
+        DateTime.parse(measures.last.createdAt);
 
     if ((endDate.day - startDate.day > 0) &&
         (endDate.month - startDate.month == 0) &&
