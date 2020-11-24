@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
+import 'package:mobile/src/components/AlertBoxComponent.dart';
 import 'package:mobile/src/models/Farm.dart';
 import 'package:mobile/src/pages/FarmConfiguration/FarmConfigurationBloc.dart';
 import 'package:mobile/src/providers/FarmProvider.dart';
@@ -197,32 +199,39 @@ class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
                       child: FlatButton(
                         child: StreamBuilder<bool>(
                           initialData: false,
+                          stream: _farmConfigurationBloc.isLoadingOutput,
                           builder: (context, snapshot) {
-                            if (!snapshot.data) {
-                              return Text(
-                                "Calcular",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                ),
-                                textAlign: TextAlign.center,
+                            if (snapshot.data) {
+                              return CircularProgressIndicator(
+                                backgroundColor: Colors.grey,
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
                               );
                             }
 
-                            return CircularProgressIndicator(
-                              backgroundColor: Colors.grey,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            return Text(
+                              "Calcular",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
+                              textAlign: TextAlign.center,
                             );
                           },
                         ),
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
-                            _farmConfigurationBloc.saveConfiguration(
+                            ApiResponseDTO result =
+                                await _farmConfigurationBloc.saveConfiguration(
                               farm.id,
                               _tipoAlimentacao,
                               convertNumber(_amountFieldController.text),
                               convertNumber(_priceFieldController.text),
+                            );
+
+                            showDialog(
+                              context: context,
+                              builder: (_) => AlertBoxComponent(data: result),
                             );
                           }
                         },

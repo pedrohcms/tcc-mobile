@@ -2,12 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/pages/FarmConfiguration/FarmConfigurationPage.dart';
 import 'package:mobile/src/services/ApiService.dart';
 
-class FarmConfigurationBloc {
+class FarmConfigurationBloc extends ChangeNotifier {
+  StreamController<bool> _isLoadingStream = new StreamController<bool>();
+  Sink<bool> get isLoadingInput => _isLoadingStream.sink;
+  Stream<bool> get isLoadingOutput => _isLoadingStream.stream;
+
   /// Method responsible to save the configuration values of the farm.
   Future<ApiResponseDTO> saveConfiguration(
     int farmId,
@@ -15,7 +20,9 @@ class FarmConfigurationBloc {
     double amount,
     double price,
   ) async {
-    Map body = {
+    isLoadingInput.add(true);
+
+    Map<String, dynamic> body = {
       'engineType': tipoAlimentacao.index == 0 ? 'eletrico' : 'combustivel',
       'unityAmount': amount,
       'unityPrice': price,
@@ -25,7 +32,7 @@ class FarmConfigurationBloc {
 
     try {
       Response response = await ApiService.makeRequest(
-        method: 'PUT',
+        method: 'UPDATE',
         uri: 'farm_configuration/$farmId',
         body: jsonEncode(body),
         sendToken: true,
@@ -55,6 +62,14 @@ class FarmConfigurationBloc {
       apiResponseDTO.message = 'Erro no servidor';
     }
 
+    isLoadingInput.add(false);
+
     return apiResponseDTO;
+  }
+
+  @override
+  void dispose() {
+    _isLoadingStream.close();
+    super.dispose();
   }
 }
