@@ -9,21 +9,31 @@ import 'package:mobile/src/pages/FarmConfiguration/FarmConfigurationPage.dart';
 import 'package:mobile/src/services/ApiService.dart';
 
 class FarmConfigurationBloc extends ChangeNotifier {
+  TipoAlimentacao _tipoAlimentacao = TipoAlimentacao.energia;
+
+  /// Stream to controll loading
   StreamController<bool> _isLoadingStream = new StreamController<bool>();
   Sink<bool> get isLoadingInput => _isLoadingStream.sink;
   Stream<bool> get isLoadingOutput => _isLoadingStream.stream;
 
+  /// Stream to controll TipoAlimentacao
+  StreamController<TipoAlimentacao> _tipoAlimentacaoStream =
+      new StreamController<TipoAlimentacao>();
+  Sink<TipoAlimentacao> get tipoAlimentacaoInput => _tipoAlimentacaoStream.sink;
+  Stream<TipoAlimentacao> get tipoAlimentacaoOutput =>
+      _tipoAlimentacaoStream.stream;
+
   /// Method responsible to save the configuration values of the farm.
   Future<ApiResponseDTO> saveConfiguration(
     int farmId,
-    TipoAlimentacao tipoAlimentacao,
     double amount,
     double price,
   ) async {
     isLoadingInput.add(true);
 
     Map<String, dynamic> body = {
-      'engineType': tipoAlimentacao.index == 0 ? 'eletrico' : 'combustivel',
+      'engineType':
+          this._tipoAlimentacao.index == 0 ? 'eletrico' : 'combustivel',
       'unityAmount': amount,
       'unityPrice': price,
     };
@@ -67,9 +77,15 @@ class FarmConfigurationBloc extends ChangeNotifier {
     return apiResponseDTO;
   }
 
+  void changeTipoAlimentacao(TipoAlimentacao tipoAlimentacao) {
+    this._tipoAlimentacao = tipoAlimentacao;
+    tipoAlimentacaoInput.add(tipoAlimentacao);
+  }
+
   @override
   void dispose() {
     _isLoadingStream.close();
+    _tipoAlimentacaoStream.close();
     super.dispose();
   }
 }

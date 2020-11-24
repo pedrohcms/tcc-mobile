@@ -24,8 +24,6 @@ class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
   final FarmConfigurationBloc _farmConfigurationBloc =
       new FarmConfigurationBloc();
 
-  TipoAlimentacao _tipoAlimentacao = TipoAlimentacao.energia;
-
   Farm farm;
 
   /// Method responsible for converting the input numbers in a value that Dart can process
@@ -87,31 +85,40 @@ class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
             ), //espaço entre a imagem e o campo de texto
 
             ListTile(
-              title: Text('Alimentação da Bomba', textAlign: TextAlign.center),
-            ),
-            ListTile(
-              title: Text('Energia Elétrica'),
-              leading: Radio(
-                value: TipoAlimentacao.energia,
-                groupValue: _tipoAlimentacao,
-                onChanged: (TipoAlimentacao value) {
-                  setState(() {
-                    _tipoAlimentacao = value;
-                  });
-                },
+              title: Text(
+                'Alimentação da Bomba',
+                textAlign: TextAlign.center,
               ),
             ),
-            ListTile(
-              title: Text('Combustível'),
-              leading: Radio(
-                value: TipoAlimentacao.combustivel,
-                groupValue: _tipoAlimentacao,
-                onChanged: (TipoAlimentacao value) {
-                  setState(() {
-                    _tipoAlimentacao = value;
-                  });
-                },
-              ),
+            StreamBuilder<TipoAlimentacao>(
+              initialData: TipoAlimentacao.energia,
+              stream: _farmConfigurationBloc.tipoAlimentacaoOutput,
+              builder: (context, snapshot) {
+                return Column(
+                  children: [
+                    ListTile(
+                      title: Text('Energia Elétrica'),
+                      leading: Radio(
+                        value: TipoAlimentacao.energia,
+                        groupValue: snapshot.data,
+                        onChanged: (TipoAlimentacao value) {
+                          _farmConfigurationBloc.changeTipoAlimentacao(value);
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: Text('Combustível'),
+                      leading: Radio(
+                        value: TipoAlimentacao.combustivel,
+                        groupValue: snapshot.data,
+                        onChanged: (TipoAlimentacao value) {
+                          _farmConfigurationBloc.changeTipoAlimentacao(value);
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
 
             Form(
@@ -216,7 +223,7 @@ class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
                             }
 
                             return Text(
-                              "Calcular",
+                              "Enviar",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
@@ -230,7 +237,6 @@ class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
                             ApiResponseDTO result =
                                 await _farmConfigurationBloc.saveConfiguration(
                               farm.id,
-                              _tipoAlimentacao,
                               convertNumber(_amountFieldController.text),
                               convertNumber(_priceFieldController.text),
                             );
