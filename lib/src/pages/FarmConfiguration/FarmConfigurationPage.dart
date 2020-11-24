@@ -42,6 +42,12 @@ class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
   }
 
   @override
+  void dispose() {
+    _farmConfigurationBloc.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     getFarmFromContext(context);
 
