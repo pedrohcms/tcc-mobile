@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/src/pages/FarmConfiguration/FarmConfigurationPage.dart';
 import 'package:mobile/src/pages/HomePage/HomePage.dart';
 import 'package:mobile/src/pages/FarmListPage/FarmListPage.dart';
 import 'package:mobile/src/pages/LinkUserPage/LinkUserPage.dart';
@@ -37,7 +38,8 @@ class App extends StatelessWidget {
           "/home": (context) => HomePage(),
           "/report": (context) => ReportPage(),
           "/register_user": (context) => RegisterUserPage(),
-          "/link_customer": (context) => LinkUserPage()
+          "/link_customer": (context) => LinkUserPage(),
+          '/farm_configuration': (context) => FarmConfigurationPage(),
         },
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,

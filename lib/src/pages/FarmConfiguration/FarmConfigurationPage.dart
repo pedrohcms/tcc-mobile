@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:mobile/src/models/Farm.dart';
+import 'package:mobile/src/pages/FarmConfiguration/FarmConfigurationBloc.dart';
+import 'package:mobile/src/providers/FarmProvider.dart';
 import 'package:mobile/src/services/TokenService.dart';
+import 'package:provider/provider.dart';
 
-enum SingingCharacter { alimentacao, energia, combustivel }
+enum TipoAlimentacao { energia, combustivel }
 
 class FarmConfigurationPage extends StatefulWidget {
   @override
@@ -9,9 +14,35 @@ class FarmConfigurationPage extends StatefulWidget {
 }
 
 class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
-  SingingCharacter _character = SingingCharacter.alimentacao;
+  final _formKey = GlobalKey<FormState>();
+
+  final _amountFieldController = TextEditingController();
+  final _priceFieldController = TextEditingController();
+
+  final FarmConfigurationBloc _farmConfigurationBloc =
+      new FarmConfigurationBloc();
+
+  TipoAlimentacao _tipoAlimentacao = TipoAlimentacao.energia;
+
+  Farm farm;
+
+  /// Method responsible for converting the input numbers in a value that Dart can process
+  double convertNumber(String value) {
+    value = value.replaceAll(RegExp(r'\.'), '');
+    value = value.replaceAll(RegExp(r'\,'), '.');
+
+    return double.parse(value);
+  }
+
+  /// Method resposible for retrive the farm from the context
+  void getFarmFromContext(BuildContext context) {
+    this.farm = context.watch<FarmProvider>().farm;
+  }
+
   @override
   Widget build(BuildContext context) {
+    getFarmFromContext(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -53,11 +84,11 @@ class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
             ListTile(
               title: Text('Energia Elétrica'),
               leading: Radio(
-                value: SingingCharacter.energia,
-                groupValue: _character,
-                onChanged: (SingingCharacter value) {
+                value: TipoAlimentacao.energia,
+                groupValue: _tipoAlimentacao,
+                onChanged: (TipoAlimentacao value) {
                   setState(() {
-                    _character = value;
+                    _tipoAlimentacao = value;
                   });
                 },
               ),
@@ -65,23 +96,25 @@ class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
             ListTile(
               title: Text('Combustível'),
               leading: Radio(
-                value: SingingCharacter.combustivel,
-                groupValue: _character,
-                onChanged: (SingingCharacter value) {
+                value: TipoAlimentacao.combustivel,
+                groupValue: _tipoAlimentacao,
+                onChanged: (TipoAlimentacao value) {
                   setState(() {
-                    _character = value;
+                    _tipoAlimentacao = value;
                   });
                 },
               ),
             ),
 
             Form(
+              key: _formKey,
               child: Column(
                 children: [
                   Container(
                     alignment: Alignment.center,
                     child: TextFormField(
-                      // campo email
+                      keyboardType: TextInputType.number,
+                      controller: _amountFieldController,
                       decoration: new InputDecoration(
                         border: new OutlineInputBorder(
                           borderRadius: const BorderRadius.all(
@@ -98,7 +131,7 @@ class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
                         fillColor: Colors.white54,
                       ),
                       validator: (value) {
-                        if (value.isEmpty) {
+                        if (value.isEmpty || convertNumber(value) < 0) {
                           return 'Por favor inserir um valor válido';
                         }
                         return null;
@@ -111,7 +144,8 @@ class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
                   Container(
                     alignment: Alignment.center,
                     child: TextFormField(
-                      // campo senha
+                      keyboardType: TextInputType.number,
+                      controller: _priceFieldController,
                       decoration: new InputDecoration(
                         border: new OutlineInputBorder(
                           borderRadius: const BorderRadius.all(
@@ -128,7 +162,7 @@ class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
                       ),
                       //campo
                       validator: (value) {
-                        if (value.isEmpty) {
+                        if (value.isEmpty || convertNumber(value) < 0) {
                           return 'Por favor inserir um valor correspondente';
                         }
                         return null;
@@ -161,28 +195,38 @@ class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
                     ),
                     child: SizedBox.expand(
                       child: FlatButton(
-                          child: StreamBuilder<bool>(
-                            initialData: false,
-                            builder: (context, snapshot) {
-                              if (!snapshot.data) {
-                                return Text(
-                                  "Calcular",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                );
-                              }
-
-                              return CircularProgressIndicator(
-                                backgroundColor: Colors.grey,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                        child: StreamBuilder<bool>(
+                          initialData: false,
+                          builder: (context, snapshot) {
+                            if (!snapshot.data) {
+                              return Text(
+                                "Calcular",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                ),
+                                textAlign: TextAlign.center,
                               );
-                            },
-                          ),
-                          onPressed: () async {}),
+                            }
+
+                            return CircularProgressIndicator(
+                              backgroundColor: Colors.grey,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            );
+                          },
+                        ),
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            _farmConfigurationBloc.saveConfiguration(
+                              farm.id,
+                              _tipoAlimentacao,
+                              convertNumber(_amountFieldController.text),
+                              convertNumber(_priceFieldController.text),
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -197,7 +241,10 @@ class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
       bottomNavigationBar: BottomAppBar(
         color: Colors.lightBlue,
         child: Padding(
-          padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+          padding: const EdgeInsets.only(
+            top: 5.0,
+            bottom: 5.0,
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
