@@ -228,7 +228,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/farm_configuration');
+                    Navigator.pushNamed(context, '/report');
                   },
                 ),
               ),
