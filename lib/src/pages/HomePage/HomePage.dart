@@ -263,6 +263,30 @@ class _HomePageState extends State<HomePage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
+                        Icons.exposure,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        "Calculos",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/farm_configuration");
+                  },
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: FlatButton(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
                         Icons.exit_to_app,
                         color: Colors.white,
                       ),
