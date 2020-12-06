@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/components/LineChartComponent/LineChartComponent.dart';
+import 'package:mobile/src/models/EngineOperation.dart';
 import 'package:mobile/src/models/Farm.dart';
 import 'package:mobile/src/models/SectorMeasure.dart';
 import 'package:mobile/src/pages/ReportPage/ReportBloc.dart';
@@ -172,7 +173,7 @@ class _ReportPageState extends State<ReportPage> {
                                 initialData: 0.0,
                                 builder: (context, snapshot) {
                                   return Text(
-                                    "Quantidade de Litros: ${Format.formatNumber(snapshot.data)} L",
+                                    "Quantidade de litros: ${Format.formatNumber(snapshot.data)} L",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white,
@@ -202,16 +203,61 @@ class _ReportPageState extends State<ReportPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                Icons.assignment,
+                                Icons.timer,
                                 color: Colors.white,
                                 size: 70,
                               ),
-                              StreamBuilder<double>(
-                                stream: _reportBloc.summedMeasuresOutput,
-                                initialData: 0.0,
+                              StreamBuilder<EngineOperation>(
+                                stream: _reportBloc.engineOperationOutput,
+                                initialData: EngineOperation(),
                                 builder: (context, snapshot) {
                                   return Text(
-                                    "Gastos Alimentação Bomba: ${Format.formatNumber(snapshot.data)} W ou L",
+                                    "Tempo total da bomba ligada: ${Format.formatNumber(snapshot.data.hoursAmount)} horas",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 19,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                          onPressed: null,
+                        ),
+                      ),
+                    ),
+                    ClipRRect(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.blue,
+                        ),
+                        child: FlatButton(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              StreamBuilder<IconData>(
+                                stream: _reportBloc.engineOperationIconOutput,
+                                initialData: Icons.assignment,
+                                builder: (context, snapshot) {
+                                  return Icon(
+                                    snapshot.data,
+                                    color: Colors.white,
+                                    size: 70,
+                                  );
+                                },
+                              ),
+                              StreamBuilder<EngineOperation>(
+                                stream: _reportBloc.engineOperationOutput,
+                                initialData: EngineOperation(),
+                                builder: (context, snapshot) {
+                                  return Text(
+                                    "Gastos de alimentação da bomba: ${Format.formatNumber(snapshot.data.totalAmount)} W ou L",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white,
@@ -241,16 +287,16 @@ class _ReportPageState extends State<ReportPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                Icons.assignment,
+                                Icons.monetization_on,
                                 color: Colors.white,
                                 size: 70,
                               ),
-                              StreamBuilder<double>(
-                                stream: _reportBloc.summedMeasuresOutput,
-                                initialData: 0.0,
+                              StreamBuilder<EngineOperation>(
+                                stream: _reportBloc.engineOperationOutput,
+                                initialData: new EngineOperation(),
                                 builder: (context, snapshot) {
                                   return Text(
-                                    "Total Gasto: ${Format.formatCurrency(snapshot.data)}",
+                                    "Total gasto: ${Format.formatCurrency(snapshot.data.totalPrice)}",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white,
@@ -342,71 +388,71 @@ class _ReportPageState extends State<ReportPage> {
 
                     // SETORES
                     StreamBuilder<List<SectorMeasure>>(
-                        stream: _reportBloc.measuresOutput,
-                        initialData: [],
-                        builder: (context, snapshot) {
-                          return ListView.separated(
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return ClipRRect(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.white,
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: Colors.blue[400],
+                      stream: _reportBloc.measuresOutput,
+                      initialData: [],
+                      builder: (context, snapshot) {
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return ClipRRect(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2,
                                   ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Setor: ${snapshot.data[index].sector}",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 25,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Cultura: ${snapshot.data[index].culture}",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Umidade Atual: ${Format.formatNumber(_reportBloc.sumMoisture(snapshot.data[index].measures))}%",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Umidade Ideal: ${Format.formatNumber(snapshot.data[index].idealMoisture)}%",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  borderRadius: BorderRadius.circular(30),
+                                  color: Colors.blue[400],
                                 ),
-                              );
-                            },
-                            separatorBuilder: (context, index) {
-                              return SizedBox(
-                                height: 10,
-                              );
-                            },
-                            itemCount: snapshot.data.length,
-                          );
-                        }),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Setor: ${snapshot.data[index].sector}",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 25,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Cultura: ${snapshot.data[index].culture}",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Umidade Atual: ${Format.formatNumber(_reportBloc.sumMoisture(snapshot.data[index].measures))}%",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Umidade Ideal: ${Format.formatNumber(snapshot.data[index].idealMoisture)}%",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return SizedBox(
+                              height: 10,
+                            );
+                          },
+                          itemCount: snapshot.data.length,
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),

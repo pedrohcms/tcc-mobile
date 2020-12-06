@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
+import 'package:mobile/src/models/EngineOperation.dart';
 import 'package:mobile/src/models/Measure.dart';
 import 'package:mobile/src/models/SectorMeasure.dart';
 import 'package:mobile/src/services/ApiService.dart';
@@ -35,6 +36,21 @@ class ReportBloc extends ChangeNotifier {
   Sink<List<SectorMeasure>> get measuresInput => _sectorMeasuresListStream.sink;
   Stream<List<SectorMeasure>> get measuresOutput =>
       _sectorMeasuresListStream.stream;
+
+  /// STREAM RESPONSÁVEL POR GRAVAR OS CÁLCULOS RETORNADOS DA API
+  BehaviorSubject<EngineOperation> _engineOperationStream =
+      new BehaviorSubject<EngineOperation>();
+  Sink<EngineOperation> get engineOperationInput => _engineOperationStream.sink;
+  Stream<EngineOperation> get engineOperationOutput =>
+      _engineOperationStream.stream;
+
+  /// STREAM RESPONSÁVEL POR DETERMINAR O ÍCONE DOS CÁLCULOS
+  BehaviorSubject<IconData> _engineOperationIconStream =
+      new BehaviorSubject<IconData>();
+  Sink<IconData> get engineOperationIconInput =>
+      _engineOperationIconStream.sink;
+  Stream<IconData> get engineOperationIconOutput =>
+      _engineOperationIconStream.stream;
 
   /// MÉTODO RESPONSÁVEL POR BUSCAR AS MEDIDAS NA API
   Future<ApiResponseDTO> getMeasures(
@@ -81,6 +97,41 @@ class ReportBloc extends ChangeNotifier {
 
           // ALIMENTANDO A STREAM DE DATAS
           dateTimeRangeInput.add(pickedDateTimeRange);
+          break;
+        case 400:
+          apiResponseDTO.data = jsonDecode(response.body);
+          _isLoadingStream.addError(apiResponseDTO);
+          break;
+      }
+
+      // MONTANDO A REQUEST PARA O ENDPOINT DE CALCULOS
+      queries = {
+        'farmId': farmId,
+        'startDateTime': pickedDateTimeRange.start,
+        'endDateTime': pickedDateTimeRange.end
+      };
+
+      response = await ApiService.makeRequest(
+        method: 'GET',
+        uri: 'engine_operation',
+        queries: queries,
+        sendToken: true,
+      );
+
+      apiResponseDTO.statusCode = response.statusCode;
+
+      switch (response.statusCode) {
+        case 200:
+          apiResponseDTO.title = "";
+
+          EngineOperation engineOperation =
+              EngineOperation.fromJson(jsonDecode(response.body));
+
+          engineOperationInput.add(engineOperation);
+
+          engineOperationIconInput
+              .add(getEngineTypeIcon(engineOperation.engineType));
+
           break;
         case 400:
           apiResponseDTO.data = jsonDecode(response.body);
@@ -144,12 +195,28 @@ class ReportBloc extends ChangeNotifier {
     return result;
   }
 
+  /// Método resposável por determinar qual ícone será exibido
+  IconData getEngineTypeIcon(String engineType) {
+    switch (engineType) {
+      case 'eletrico':
+        return Icons.power;
+
+      case 'combustivel':
+        return Icons.local_gas_station;
+
+      default:
+        return Icons.assignment;
+    }
+  }
+
   @override
   void dispose() {
     _isLoadingStream.close();
     _dateTimeRangeStream.close();
     _summedMeasuresStream.close();
     _sectorMeasuresListStream.close();
+    _engineOperationStream.close();
+    _engineOperationIconStream.close();
     super.dispose();
   }
 }
