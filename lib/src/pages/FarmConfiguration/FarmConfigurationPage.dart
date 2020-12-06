@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/components/AlertBoxComponent.dart';
 import 'package:mobile/src/models/Farm.dart';
@@ -8,6 +7,7 @@ import 'package:mobile/src/models/FarmConfiguration.dart';
 import 'package:mobile/src/pages/FarmConfiguration/FarmConfigurationBloc.dart';
 import 'package:mobile/src/providers/FarmProvider.dart';
 import 'package:mobile/src/services/TokenService.dart';
+import 'package:mobile/src/utils/Format.dart';
 import 'package:provider/provider.dart';
 
 enum TipoAlimentacao { energia, combustivel }
@@ -157,12 +157,10 @@ class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
                     }
 
                     _amountFieldController.text =
-                        NumberFormat("###,###,###.##", 'pt_BR')
-                            .format(snapshot.data.unityAmount);
+                        Format.formatNumber(snapshot.data.unityAmount);
 
                     _priceFieldController.text =
-                        NumberFormat("###,###,###.##", 'pt_BR')
-                            .format(snapshot.data.unityPrice);
+                        Format.formatNumber(snapshot.data.unityPrice);
 
                     return Column(
                       children: [

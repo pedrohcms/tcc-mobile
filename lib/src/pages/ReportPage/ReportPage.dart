@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/components/LineChartComponent/LineChartComponent.dart';
 import 'package:mobile/src/models/Farm.dart';
@@ -7,6 +6,7 @@ import 'package:mobile/src/models/SectorMeasure.dart';
 import 'package:mobile/src/pages/ReportPage/ReportBloc.dart';
 import 'package:mobile/src/providers/FarmProvider.dart';
 import 'package:mobile/src/services/TokenService.dart';
+import 'package:mobile/src/utils/Format.dart';
 import 'package:provider/provider.dart';
 
 class ReportPage extends StatefulWidget {
@@ -21,16 +21,6 @@ class _ReportPageState extends State<ReportPage> {
   /// MÉTODO RESPONSÁVEL POR RETORNA A FAZENDA ATUAL ATRAVÉS DO PROVIDER
   void getFarmFromContext(BuildContext context) {
     _farm = context.watch<FarmProvider>().farm;
-  }
-
-  /// MÉTODO RESPONSÁVEL POR FORMATAR DA DATA PARA SER MOSTRADA NA TELA
-  String formatDate(DateTime date) {
-    return DateFormat.yMd('pt_BR').format(date);
-  }
-
-  /// MÉTODO RESPONSÁVEL POR FORMATAR A SOMATÓRIA DAS MEDIDAS
-  String formatSummedMeasures(double summedMeasures) {
-    return NumberFormat("###,###,###.##", 'pt_BR').format(summedMeasures);
   }
 
   @override
@@ -182,7 +172,7 @@ class _ReportPageState extends State<ReportPage> {
                                 initialData: 0.0,
                                 builder: (context, snapshot) {
                                   return Text(
-                                    "Quantidade de Litros: ${formatSummedMeasures(snapshot.data)} L",
+                                    "Quantidade de Litros: ${Format.formatNumber(snapshot.data)} L",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white,
@@ -221,7 +211,7 @@ class _ReportPageState extends State<ReportPage> {
                                 initialData: 0.0,
                                 builder: (context, snapshot) {
                                   return Text(
-                                    "Gastos Alimentação Bomba: ${formatSummedMeasures(snapshot.data)} W ou L",
+                                    "Gastos Alimentação Bomba: ${Format.formatNumber(snapshot.data)} W ou L",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white,
@@ -260,7 +250,7 @@ class _ReportPageState extends State<ReportPage> {
                                 initialData: 0.0,
                                 builder: (context, snapshot) {
                                   return Text(
-                                    "Total Gasto: ${formatSummedMeasures(snapshot.data)} Reais",
+                                    "Total Gasto: ${Format.formatCurrency(snapshot.data)}",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white,
@@ -312,7 +302,7 @@ class _ReportPageState extends State<ReportPage> {
                           builder: (context, snapshot) {
                             return Text(
                               snapshot.data != null
-                                  ? "${formatDate(snapshot.data.start)} - ${formatDate(snapshot.data.end)}"
+                                  ? "${Format.formatDate(snapshot.data.start)} - ${Format.formatDate(snapshot.data.end)}"
                                   : "Escolha o intervalo para a busca",
                               style: TextStyle(
                                 color: Colors.white,
@@ -389,7 +379,7 @@ class _ReportPageState extends State<ReportPage> {
                                         ),
                                       ),
                                       Text(
-                                        "Umidade Atual: ${formatSummedMeasures(_reportBloc.sumMoisture(snapshot.data[index].measures))}%",
+                                        "Umidade Atual: ${Format.formatNumber(_reportBloc.sumMoisture(snapshot.data[index].measures))}%",
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: Colors.white,
@@ -397,7 +387,7 @@ class _ReportPageState extends State<ReportPage> {
                                         ),
                                       ),
                                       Text(
-                                        "Umidade Ideal: ${formatSummedMeasures(snapshot.data[index].idealMoisture)}%",
+                                        "Umidade Ideal: ${Format.formatNumber(snapshot.data[index].idealMoisture)}%",
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: Colors.white,

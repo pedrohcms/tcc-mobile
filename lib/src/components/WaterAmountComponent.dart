@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:mobile/src/utils/Format.dart';
 
 class WaterAmountComponent extends StatelessWidget {
   final String text;
@@ -30,7 +30,7 @@ class WaterAmountComponent extends StatelessWidget {
               height: 10,
             ),
             Text(
-              "${NumberFormat("###,###,###.##", 'pt_BR').format(amount)} LITROS",
+              "${Format.formatNumber(amount)} LITROS",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
