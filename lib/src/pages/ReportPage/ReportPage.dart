@@ -197,6 +197,84 @@ class _ReportPageState extends State<ReportPage> {
                         ),
                       ),
                     ),
+                    ClipRRect(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.blue,
+                        ),
+                        child: FlatButton(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.assignment,
+                                color: Colors.white,
+                                size: 70,
+                              ),
+                              StreamBuilder<double>(
+                                stream: _reportBloc.summedMeasuresOutput,
+                                initialData: 0.0,
+                                builder: (context, snapshot) {
+                                  return Text(
+                                    "Gastos Alimentação Bomba: ${formatSummedMeasures(snapshot.data)} W ou L",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 19,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                          onPressed: null,
+                        ),
+                      ),
+                    ),
+                    ClipRRect(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.blue,
+                        ),
+                        child: FlatButton(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.assignment,
+                                color: Colors.white,
+                                size: 70,
+                              ),
+                              StreamBuilder<double>(
+                                stream: _reportBloc.summedMeasuresOutput,
+                                initialData: 0.0,
+                                builder: (context, snapshot) {
+                                  return Text(
+                                    "Total Gasto: ${formatSummedMeasures(snapshot.data)} Reais",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 25,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                          onPressed: null,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -345,6 +423,118 @@ class _ReportPageState extends State<ReportPage> {
             ],
           );
         },
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.lightBlue,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                flex: 1,
+                child: FlatButton(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.trending_up,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        "Relatórios",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/report');
+                  },
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: FlatButton(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.person_add,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        "Vincular Conta",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/link_customer");
+                  },
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: FlatButton(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.exposure,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        "Calculos",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/farm_configuration");
+                  },
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: FlatButton(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.exit_to_app,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        "Logout",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    TokenService.deleteToken();
+
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/',
+                      (Route<dynamic> route) => false,
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
