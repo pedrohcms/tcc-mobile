@@ -144,6 +144,169 @@ class _ReportPageState extends State<ReportPage> {
                   title: Text("Medições da Fazenda"),
                 ),
               ),
+              StreamBuilder<EngineOperation>(
+                stream: _reportBloc.engineOperationOutput,
+                initialData: EngineOperation(),
+                builder: (context, snapshot) {
+                  if (snapshot.data.totalAmount == 0 &&
+                      snapshot.data.totalPrice == 0) {
+                    return SliverFixedExtentList(
+                      itemExtent: 100.0,
+                      delegate: SliverChildListDelegate(
+                        [
+                          ClipRRect(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.red,
+                              ),
+                              child: FlatButton(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.info,
+                                      color: Colors.white,
+                                      size: 40,
+                                    ),
+                                    Text(
+                                      "Por favor configure os valores na tela de cálculos.",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 19,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                onPressed: null,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return SliverFixedExtentList(
+                    itemExtent: 150.0,
+                    delegate: SliverChildListDelegate(
+                      [
+                        ClipRRect(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.blue,
+                            ),
+                            child: FlatButton(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.timer,
+                                    color: Colors.white,
+                                    size: 70,
+                                  ),
+                                  Text(
+                                    "Tempo total da bomba ligada: ${Format.formatNumber(snapshot.data.hoursAmount)} horas",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 19,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              onPressed: null,
+                            ),
+                          ),
+                        ),
+                        ClipRRect(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.blue,
+                            ),
+                            child: FlatButton(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  StreamBuilder<IconData>(
+                                    stream:
+                                        _reportBloc.engineOperationIconOutput,
+                                    initialData: Icons.assignment,
+                                    builder: (context, snapshot) {
+                                      return Icon(
+                                        snapshot.data,
+                                        color: Colors.white,
+                                        size: 70,
+                                      );
+                                    },
+                                  ),
+                                  Text(
+                                    "Gastos de alimentação da bomba: ${Format.formatNumber(snapshot.data.totalAmount)} W ou L",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 19,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              onPressed: null,
+                            ),
+                          ),
+                        ),
+                        ClipRRect(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.blue,
+                            ),
+                            child: FlatButton(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.monetization_on,
+                                    color: Colors.white,
+                                    size: 70,
+                                  ),
+                                  Text(
+                                    "Total gasto: ${Format.formatCurrency(snapshot.data.totalPrice)}",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 25,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              onPressed: null,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
               SliverFixedExtentList(
                 itemExtent: 150.0,
                 delegate: SliverChildListDelegate(
@@ -174,129 +337,6 @@ class _ReportPageState extends State<ReportPage> {
                                 builder: (context, snapshot) {
                                   return Text(
                                     "Quantidade de litros: ${Format.formatNumber(snapshot.data)} L",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 25,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          onPressed: null,
-                        ),
-                      ),
-                    ),
-                    ClipRRect(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.blue,
-                        ),
-                        child: FlatButton(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.timer,
-                                color: Colors.white,
-                                size: 70,
-                              ),
-                              StreamBuilder<EngineOperation>(
-                                stream: _reportBloc.engineOperationOutput,
-                                initialData: EngineOperation(),
-                                builder: (context, snapshot) {
-                                  return Text(
-                                    "Tempo total da bomba ligada: ${Format.formatNumber(snapshot.data.hoursAmount)} horas",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 19,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          onPressed: null,
-                        ),
-                      ),
-                    ),
-                    ClipRRect(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.blue,
-                        ),
-                        child: FlatButton(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              StreamBuilder<IconData>(
-                                stream: _reportBloc.engineOperationIconOutput,
-                                initialData: Icons.assignment,
-                                builder: (context, snapshot) {
-                                  return Icon(
-                                    snapshot.data,
-                                    color: Colors.white,
-                                    size: 70,
-                                  );
-                                },
-                              ),
-                              StreamBuilder<EngineOperation>(
-                                stream: _reportBloc.engineOperationOutput,
-                                initialData: EngineOperation(),
-                                builder: (context, snapshot) {
-                                  return Text(
-                                    "Gastos de alimentação da bomba: ${Format.formatNumber(snapshot.data.totalAmount)} W ou L",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 19,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          onPressed: null,
-                        ),
-                      ),
-                    ),
-                    ClipRRect(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.blue,
-                        ),
-                        child: FlatButton(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.monetization_on,
-                                color: Colors.white,
-                                size: 70,
-                              ),
-                              StreamBuilder<EngineOperation>(
-                                stream: _reportBloc.engineOperationOutput,
-                                initialData: new EngineOperation(),
-                                builder: (context, snapshot) {
-                                  return Text(
-                                    "Total gasto: ${Format.formatCurrency(snapshot.data.totalPrice)}",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white,
