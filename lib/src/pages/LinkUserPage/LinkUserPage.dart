@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/components/AlertBoxComponent.dart';
+import 'package:mobile/src/components/CustomBottomAppBarComponent/CustomBottomAppBarComponent.dart';
 import 'package:mobile/src/models/Farm.dart';
 import 'package:mobile/src/models/User.dart';
 import 'package:mobile/src/pages/LinkUserPage/LinkUserBloc.dart';
@@ -338,6 +339,7 @@ class _LinkUserPageState extends State<LinkUserPage> {
           ],
         ),
       ),
+      bottomNavigationBar: CustomBottomAppBarComponent(),
     );
   }
 }

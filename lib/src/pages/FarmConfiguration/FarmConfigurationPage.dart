@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
 import 'package:mobile/src/components/AlertBoxComponent.dart';
+import 'package:mobile/src/components/CustomBottomAppBarComponent/CustomBottomAppBarComponent.dart';
 import 'package:mobile/src/models/Farm.dart';
 import 'package:mobile/src/models/FarmConfiguration.dart';
 import 'package:mobile/src/pages/FarmConfiguration/FarmConfigurationBloc.dart';
@@ -342,97 +343,7 @@ class _FarmConfigurationPageState extends State<FarmConfigurationPage> {
           ],
         ), //o listView serve para fixar as coisas na página(teclado sobresair)
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.lightBlue,
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 5.0,
-            bottom: 5.0,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.trending_up,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "Relatórios",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/report');
-                  },
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.home,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "Home",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/home");
-                  },
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.exit_to_app,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "Logout",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    TokenService.deleteToken();
-
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      '/',
-                      (Route<dynamic> route) => false,
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: CustomBottomAppBarComponent(),
     );
   }
 }

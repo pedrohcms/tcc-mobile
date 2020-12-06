@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
+import 'package:mobile/src/components/CustomBottomAppBarComponent/CustomBottomAppBarComponent.dart';
 import 'package:mobile/src/components/LineChartComponent/LineChartComponent.dart';
 import 'package:mobile/src/models/EngineOperation.dart';
 import 'package:mobile/src/models/Farm.dart';
@@ -500,118 +501,7 @@ class _ReportPageState extends State<ReportPage> {
           );
         },
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.lightBlue,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.trending_up,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "Relatórios",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/report');
-                  },
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.person_add,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "Vincular Conta",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/link_customer");
-                  },
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.exposure,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "Calculos",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/farm_configuration");
-                  },
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.exit_to_app,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "Logout",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    TokenService.deleteToken();
-
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      '/',
-                      (Route<dynamic> route) => false,
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: CustomBottomAppBarComponent(),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/src/DTOs/ApiResponseDTO.dart';
+import 'package:mobile/src/components/CustomBottomAppBarComponent/CustomBottomAppBarComponent.dart';
 import 'package:mobile/src/models/Farm.dart';
 import 'package:mobile/src/pages/FarmListPage/FarmListBloc.dart';
 import 'package:mobile/src/providers/FarmProvider.dart';
@@ -30,96 +31,7 @@ class _FarmListPageState extends State<FarmListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.lightBlue,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.add,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "Adicionar Fazenda",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      "/register_farm",
-                    );
-                  },
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.person_add,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "Adicionar Usuário",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      "/register_user",
-                    );
-                  },
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.exit_to_app,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "Logout",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    TokenService.deleteToken();
-
-                    Navigator.popAndPushNamed(context, '/');
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: CustomBottomAppBarComponent(),
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
