@@ -12,10 +12,10 @@ import 'package:rxdart/rxdart.dart';
 
 class ReportBloc extends ChangeNotifier {
   DateTimeRange dateTimeRange;
-  bool _isLoading = false;
+  bool _isLoading = true;
 
   /// STREAM RESPONSÁVEL POR ANOTAR SE A TELA ESTÁ CARREGANDO
-  StreamController<bool> _isLoadingStream = new StreamController<bool>();
+  BehaviorSubject<bool> _isLoadingStream = new BehaviorSubject<bool>();
   Sink<bool> get isLoadingInput => _isLoadingStream.sink;
   Stream<bool> get isLoadingOutput => _isLoadingStream.stream;
 

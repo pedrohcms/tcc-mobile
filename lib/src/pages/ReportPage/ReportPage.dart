@@ -33,9 +33,9 @@ class _ReportPageState extends State<ReportPage> {
 
   @override
   Widget build(BuildContext context) {
-    // NO INICIO DA PÁGINA CHAMAMOS A API PARA MOSTRAR OS DADOS
     getFarmFromContext(context);
 
+    // NO INICIO DA PÁGINA CHAMAMOS A API PARA MOSTRAR OS DADOS
     _reportBloc.getMeasures(
       DateTimeRange(
         start: DateTime(
@@ -51,7 +51,7 @@ class _ReportPageState extends State<ReportPage> {
     return Scaffold(
       body: StreamBuilder<bool>(
         stream: _reportBloc.isLoadingOutput,
-        initialData: false,
+        initialData: true,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             ApiResponseDTO apiResponseDTO = ApiResponseDTO.fromJson(
@@ -104,7 +104,7 @@ class _ReportPageState extends State<ReportPage> {
           }
 
           // CASO ESTEJA CARREGANDO MOSTRAMOS O LOADING
-          if (!snapshot.hasData) {
+          if (!snapshot.data) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -149,8 +149,8 @@ class _ReportPageState extends State<ReportPage> {
                 stream: _reportBloc.engineOperationOutput,
                 initialData: EngineOperation(),
                 builder: (context, snapshot) {
-                  if (snapshot.data.totalAmount == 0 &&
-                      snapshot.data.totalPrice == 0) {
+                  if (snapshot.data.unityAmount == 0 ||
+                      snapshot.data.unityPrice == 0) {
                     return SliverFixedExtentList(
                       itemExtent: 100.0,
                       delegate: SliverChildListDelegate(
@@ -176,6 +176,49 @@ class _ReportPageState extends State<ReportPage> {
                                     ),
                                     Text(
                                       "Por favor configure os valores na tela de cálculos.",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 19,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                onPressed: null,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  if (snapshot.data.hoursAmount == 0) {
+                    return SliverFixedExtentList(
+                      itemExtent: 100.0,
+                      delegate: SliverChildListDelegate(
+                        [
+                          ClipRRect(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.blue,
+                              ),
+                              child: FlatButton(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.info,
+                                      color: Colors.white,
+                                      size: 40,
+                                    ),
+                                    Text(
+                                      "Nenhuma operação da bomba foi registrada no período.",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Colors.white,
