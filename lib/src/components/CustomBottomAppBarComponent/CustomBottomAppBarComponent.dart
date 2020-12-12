@@ -8,7 +8,11 @@ class CustomBottomAppBarComponent extends StatelessWidget {
       String currentRoute, Map<String, Button> buttons) {
     switch (currentRoute) {
       case '/farm_list':
-        return [buttons['/register_farm'], buttons['/register_user']];
+        return [
+          buttons['/register_farm'],
+          buttons['/register_user'],
+          buttons['/profile']
+        ];
 
       case '/home':
         return [
@@ -107,6 +111,11 @@ class CustomBottomAppBarComponent extends StatelessWidget {
             (Route<dynamic> route) => false,
           );
         },
+      ),
+      "/profile": Button(
+        title: 'Permissões',
+        icon: Icons.how_to_reg,
+        route: "/profile",
       ),
       "/farm_list": Button(),
     };

@@ -1,14 +1,16 @@
 class User {
+  int id;
   String name;
   String email;
   int profile;
 
-  User({this.name, this.email, this.profile});
+  User({this.id, this.name, this.email, this.profile});
 
   User.fromJson(Map<String, dynamic> json) {
+    if (json['id'] != null) id = json['id'];
     name = json['name'];
     email = json['email'];
-    profile = json['profile'];
+    profile = json['profile'] != null ? json['profile'] : json['profileId'];
   }
 
   Map<String, dynamic> toJson() {
