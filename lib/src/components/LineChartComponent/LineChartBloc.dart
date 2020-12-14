@@ -22,12 +22,14 @@ class LineChartBloc {
   List<ChartSeries> makeGraphicSeries() {
     List<Measure> measures = makeGraphicData();
 
+    measures.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
     DateFormat format;
 
-    if(measures.isNotEmpty) {
+    if (measures.isNotEmpty) {
       format = getDateTimeFormat(measures);
     }
-  
+
     return [
       LineSeries<Measure, String>(
         name: "Quantidade de água",
@@ -47,10 +49,8 @@ class LineChartBloc {
 
   /// MÉTODO RESPONSÁVEL POR RETORNAR O FORMATO DA DATA DO GRÁFICO
   DateFormat getDateTimeFormat(List<Measure> measures) {
-    DateTime startDate =
-        DateTime.parse(measures.first.createdAt);
-    DateTime endDate =
-        DateTime.parse(measures.last.createdAt);
+    DateTime startDate = DateTime.parse(measures.first.createdAt);
+    DateTime endDate = DateTime.parse(measures.last.createdAt);
 
     if ((endDate.day - startDate.day > 0) &&
         (endDate.month - startDate.month == 0) &&
